@@ -1,0 +1,37 @@
+\section{Match Pair Approximation}
+
+\begin{algorithm}
+\caption{Match Approximate}\label{algo:match}
+\begin{algorithmic}[1]
+\For{$i\gets 1$ to $N_K$}
+\State let $p_r$ be the source of the receive $R(p)_i$
+\For{$j\gets 1$ to $\mathit{n_s}(p_s,p)$ for each possible sender $p_s$}
+\If{$(p_r = \ast\vee p_r = p_s)\wedge i \geq j\wedge i \leq j + (N_K - \mathit{n_s}(p_s,p))$}
+\State $M\gets M\cup\{\langle R(p)_i,S(p_s,p)_j \rangle\}$
+\EndIf
+\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\algoref{algo:match} approximates the match pairs for the receives in a common process $p$ and the sends from multiple sources to $p$ in a specific section. 
+The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main} and is inspired by the match pair generation algorithm in the prior work \cite{}. 
+
+Intuitively, the algorithm considers all the pairs of a receive and a send in a section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
+
+The algorithm first checks each receive $R(p)_i$ in a section at line 2. The subscript $i$ is the rank of $R(p)_i$. The process $p_r$ is the source of $R(p)_i$.
+For each receive, the algorithm checks the sends with the ranks from $1$ to $n_s(p_s,p)$ in the sequence $S(p_s,p)$ for each potential source $p_s$ at line 3.
+The subscript $j$ is the rank of the send $S(p_s,p)_j$. 
+
+The condition at line 4 soundly prunes the match pair $\langle R(p)_i,S(p_s,p)_j\rangle$ that may never occur in the runtime with three rules. The first rule constrains the match pair in that either $R(p)_i$ is a wildcard receive or $R(p)_i$ and $S(p_s,p)_j$ have an identical source. The second rule and the third rule assert that the messages from a common source are received in a FIFO order. In precise, the second rule constrains that the rank of $R(p)_i$ is greater or equal to the rank of $S(p_s,p)_j$, indicating that the early messages from $p_s$ must be received by the preceding receives in $p$. The third rule also constrains the rank of $R(p)_i$ and the rank of $S(p_s,p)_j$, but in a more complex structure of an inequation. It asserts that there are a sufficient number of sends to match the preceding receives in $p$. This number, $j + (N_K - \mathit{n_s}(p_s,p))$, is estimated by considering all the potential sends including $j$ preceding sends from $p_s$ to $p$ and all the sends from other sources to $p$.
+If the condition is satisfied, the match pair is added to the set $M$ at line 5. Note that \algoref{algo:match} is not complete meaning that the unprecise match pairs may be added to $M$.
+
+\begin{lemma}
+\algoref{algo:match} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
+\end{lemma}
+\begin{proof}
+... $\Box$
+\end{proof}
+
+
+%The condition at line 4 is then used to soundly prune the pair of $R(p)_i$ and $S(p_s,p)_j$ if they never match in the runtime with three rules. The first rule indicates that $R(p)_i$ is either a wildcard receive (the receive that may match a send from any source) or the source of $R(p)_i$ matches the source of $S(p_s,p)_j$. The second rule indicates that $i$ is greater or equal to $j$ meaning that the sends preceding $S(p_s,p)_j$ in $S(p_s,p)$ have to be matched with the receives in $p$. 

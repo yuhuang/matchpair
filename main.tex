@@ -1,0 +1,67 @@
+\section{Main Algorithm}
+
+%Notations: 
+%Process set $P$
+%receive list $R(p_{dest})$
+%send list $S(p_{src}, p_{dest})$
+
+\algoref{algo:main} describes the general structure of the match pair generator in three steps: section match, send distribution, and match pair approximation. It is assumed that the CTPs discussed in the paper are well formed. 
+
+$\mathit{P}$ is a set of all the processes in a CTP. 
+$Src(p)$ is a set of the unique identifiers of the sources for the receives in process $p$. The identifier of a source can be removed from $Src(p)$ once there are no sends that can be distributed from the source.
+$R(p)$ is a sequence of all the receives in process $p$. The sequence order is identical with that in the original CTP. $R(p)_i$ is the $i$th. receive in the sequence.
+The function $N_r(p_{s},p)$ returns the number of all the receives in $R(p)$ with the source $p_{s}$. If $p_{s}$ is equal to ``$ALL$", then $N_r(ALL ,p)$ represents the number of all the receives in $R(p)$.
+$S(p_{s},p)$ is a sequence of all the sends from the source $p_{s}$ to the destination $p$. The sequence order is also identical with that in the original CTP. $S(p_{s},p)_j$ is the $j$th. send in the sequence.
+Similarly, the function $N_s(p_{s},p)$ returns the number of all the sends in $S(p_{s},p)$. 
+
+\begin{algorithm}
+\caption{Main Entrance}\label{algo:main}
+\begin{algorithmic}[1]
+\For{$p\in \mathit{P}$}
+\State $Src(p)\gets\{p_1,p_2,\ldots,p_x\}$   \Comment{a set of all the potential sources for process $p$}
+\While{$N_r(ALL,p)>0$}
+\State $N_K\gets$\Call{SectionMatch}{K}
+%$N_K \gets \Call{min}{|Src(p)|\times\mathit{K}, N_r(ALL,p)}$
+\For{$i\gets1$ to $x$}
+\State $\mathit{n_s}(p_i,p)\gets 0$
+\EndFor
+\State $\mathit{n_s^\prime}\gets$\Call{DistributeSends}{$\mathit{n_s}$,$p$,$N_K$}
+\State $M\gets$\Call{MatchApprox}{$\mathit{n_s^\prime}$,$p$,$N_K$}
+\State \Call{remove}{$R(p)$,$N_K$} 
+%\State $R(p)\gets R(p)\setminus\{R(p)_i\mid 1\leq i\leq N_K\}$ 
+\For{$i\gets 1$ to $x$} 
+\State \Call{remove}{$S(p_i,p)$,$n_s(p_i,p)$}
+%\State $S(p_i,p)\gets S(p_i,p)\setminus\{S(p_i,p)_j\mid 1\leq j\leq\mathit{n_s}(p_i,p)\}$
+\EndFor
+\EndWhile
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm iteratively splits the receives in each process $p$ into multiple sections, distributes the potential sends to each section, and approximates the match pairs for each section until $N_r(ALL,p)$ is equal to zero at line 3 indicating that all the receives in $R(p)$ are matched.  The section is defined in \defref{def:section}.
+
+\begin{definition}
+A section for any process $p$ consists of a subsequence of the receives in $R(p)$ and several subsequences of the sends in $S(p_i,p)$ for any potential source $p_i\in Src(p)$.
+\label{def:section}
+\end{definition}
+
+$\mathrm{SECTIONMATCH}$ in (2) computes an integer as the size of the next section that is matched among the receives in $R(p)$ and all the sends in $S(p_{i},p)$ for any potential source $p_{i}\in Src(p)$ 
+given an input $K$. 
+\begin{equation}
+\Call{min}{|Src(p)|\times\mathit{K}, N_r(ALL,p)}
+\end{equation}
+The function $\mathrm{MIN}$ returns the minimum of the two values: $|Src(p)|\times\mathit{K}$ and $ N_r(ALL,p)$, indicating that the next section intends to match a subsequence of receives in $R(p)$ such that $K$ sends in average are distributed from each source in $Src(p)$ for matching these receives; or, if there are not enough receives in $R(p)$, the rest of the receives in $R(p)$ are all considered in the next section. $N_K$ is assigned to the size of the next section at line 4. 
+
+\begin{lemma}
+\algoref{algo:main} partitions all the sends and receives in a CTP into multiple sections; each send or receive is added in a single section.
+\end{lemma}
+\begin{proof}
+... 
+$\Box$
+\end{proof}
+
+%The integer $\mathit{K}$ is used to compute the count of sends/receives ($N_K$) in each section at line 4. 
+The function $\mathit{n_s}(p_{i},p)$ returns the count of the  sends from $p_i$ to $p$ in a specific section. The count is initialized to zero for each potential source $p_i$ at line 6 and is updated by the function $\mathrm{DISTRIBUTESENDS}$ given the input $n_s$, $p$ and $N_K$ at line 8. The new count $n_s^\prime$ is then used to approximate the match pairs for a specific section in the function $\mathrm{MATCHAPPROX}$ given two additional input $p$ and $N_K$.
+The output $M$ stores the approximated match pairs. After that, the matched receives and sends in the current section are removed from $R(p)$ and $S(p_i,p)$ at line 10 and line 12 respectively, indicating that they are not considered for match pair generation in the next section. The function $\mathrm{REMOVE}$ is used to remove a fixed number (designated by the second input) of sends or receives from the beginning of a sequence (designated by the first input). 
+
+

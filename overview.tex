@@ -1,0 +1,49 @@
+\section{Overview of SMT Encoding}
+
+%define match pair in the format of SMT encoding
+
+%discuss how match pairs are used in SMT encoding for error detection
+
+The crucial idea behind the prior work is encoding a CTP into an SMT problem that uses a set of formulas to constrain the program behavior based on the semantics. 
+The typical errors are then checked by solving the SMT problem with additional steps. If a satisfying assignment exists for the SMT problem, then the error is detected for a feasible schedule with a resolution of the match pairs to capture the message communication in the schedule. If the SMT problem is unsatisfiable, the CTP is free of that error because no feasible schedule exists with any resolution of the match pairs.
+
+%In precise, the violation of assertions needs to encode the negation of the tested assertions into the SMT problem \cite{}; the zero buffer incompatibility requires more restricted formulas of the zero buffer semantics encoded in the SMT problem \cite{}; and the deadlock should launch a series of static analyses to first detect a potential deadlock before validating it with the SMT problem \cite{}.  
+
+The SMT encoding relies on the \textit{happens-before} relation in \defref{def:hb}.
+\begin{definition}
+The happens-before relation, denoted as $\prec_{\mathtt{HB}}$, is a partial order over operations.
+\label{def:hb}
+\end{definition}
+Given two operations, $A$ and $B$, if $A$ must complete before $B$ in a valid program execution, then $A \prec_{\mathtt{HB}} B$ will be an SMT constraint. 
+The relation is derived from the program source and potential match pairs. 
+
+The SMT encoding specifies the constraints from the program source such that the operations in each process has to be sequentially ordered. The happens-before relation is used to define a list of rules for the constraint of sequential order. Please refer to the prior work \cite{} for the full definition of these rules. 
+
+The SMT encoding also needs to express the message communication in the given match pairs.
+Informally, a match pair equates the shared components of a send and receive and constrains the send to happen before the nearest-enclosing wait of the receive. 
+
+\begin{definition}
+A match pair, $\langle r\ s\rangle$, for a receive $r$ and a send $s$ corresponds to the constraints:
+\begin{compactenum}
+\item $r$ and $s$ have a common destination;
+\item $r$ and $s$ have a common source, or $r$ is a wildcard receive; and
+\item $s \prec_{\mathtt{HB}} nw_r$, where $nw_r$ is the nearest-enclosing wait of $r$.
+\end{compactenum}
+\end{definition} 
+If zero buffer semantics are applied, the \textit{happens-before} relation is further constrained for any match pair $\langle r\ s \rangle$ such that $s$ and $r$ are strictly ordered, meaning that there does not exist any operation $op$ such that $s \prec_{\mathtt{HB}} op$ and $op \prec_{\mathtt{HB}} r$. 
+
+\begin{lemma}
+The match pair $\langle r\ s\rangle$ is precise if the receive $r$ is matched with the send $s$ in at least one feasible schedule.
+\end{lemma}
+
+%\begin{corollary}
+%The bogus match pair $\langle r\ s\rangle$ implies that the receive $r$ can not be matched with the send $s$ in any feasible schedule.
+%\end{corollary}
+
+The SMT problem in the prior work is given an over-approximated set of match pairs including all the precise match pairs and maybe some unprecise match pairs. Solving the problem needs to find one among all possible match pair resolutions that satisfies the constraints in the encoding. Consider the CTPs with large number of processes and high degree of message non-determinism, the number of match pair resolutions can be exponential. Therefore, the prior work does not scale for such a CTP. This paper presents a new approach that is able to generate a smaller set of match pairs, therefore, leading to a much more efficient SMT encoding.
+
+
+
+
+
+

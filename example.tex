@@ -1,0 +1,36 @@
+\section{Example}
+
+\examplefigone
+
+It is necessary to explain message communication in a simple CTP consisting of a handful of operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. Line numbers appear in the first column for each process. The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the problem in the paper.
+The example shows that the behavior under infinite buffer semantics meaning that a message may be buffered in the system or in the application.
+
+In \figref{fig:example}, the sends and receives are consumed immediately by the runtime. The send specifies two parameters where the first is the ID of the source and the second is the ID of the destination. The receive also has four parameters: the source ID, the destination ID, the local variable to store the message content, and the ID of the nearest-enclosing wait. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
+
+Picking up the scenario in \figref{fig:example}, process $p_0$ receives five messages from any source or the specific sources and sends one message to $p_1$; process $p_1$ sends three messages to $p_0$ and receives a message from $p_0$; and process $p_2$ sends two messages to $p_0$. 
+
+Given the concurrency in the scenario, a feasible schedule is a sequence of operations where the order is consistent with the order of completion in a real execution. (1) shows an instance of the feasible schedule. 
+\begin{equation}
+\scriptsize
+s_0\rightarrow r_0 (s_0)\rightarrow s_3\rightarrow r_1 (s_3)\rightarrow s_1\rightarrow r_2 (s_1)\rightarrow 
+s_5\rightarrow r_5 (s_5)\rightarrow s_2\rightarrow r_3 (s_2)\rightarrow s_4\rightarrow r_4 (s_4)
+\end{equation} 
+The sends and receives in (1) are totally ordered for completion. For example, the arrow between the receive $r_0$ and the send $s_3$ shows that $r_0$ is matched before $s_3$ is matched in the runtime. 
+Also, the send in parenthesis for any receive shows that a message flows from the send through the receive. 
+For example, the receive $r_1$ with the send $s_3$ in parenthesis indicates that the local variable $B$ in $r_1$ stores the message content from $s_3$ in the runtime. 
+
+Since the message delivery is non-deterministic for the use of wildcard receives, there exist other feasible schedules for the concurrency in \figref{fig:example} where the messages are delivered in different ways. For example,  the receive $r_0$ can be matched with the send $s_3$ instead of the send $s_0$ if $s_3$ arrives in $p_0$ earlier than $s_0$. Given the message non-determinism, the message communication can be resolved in many (and possibly exponential) ways. 
+
+To capture the message communication, the match pair is used for a send and a receive where they may potentially match in the runtime.
+For example, the match pair $\langle r_1\ s_3\rangle$ indicates that the receive $r_1$ is potentially matched with the send $s_3$ in the runtime.
+As such, the message communication for (1) can be resolved by the set of match pairs $\{\langle r_0\ s_0\rangle, \langle r_1\ s_3\rangle, \langle r_2\ s_1\rangle, \langle r_5\ s_5\rangle, \langle r_3\ s_2\rangle, \langle r_4\ s_4\rangle\}$. In the set, each send or receive is associated with a single match pair, therefore, is deterministic. Also, the message communication for any of the other schedules can be resolved by a new set of match pairs such as $\{\langle r_0\ s_3\rangle,$ $\langle r_1\ s_0\rangle,$ $\langle r_2\ s_1\rangle,$ $\langle r_5\ s_5\rangle,$ $\langle r_3\ s_2\rangle,$ $\langle r_4\ s_4\rangle\}$. As shown, the new match pairs $\langle r_0\ s_3\rangle$ and $\langle r_1\ s_0\rangle$ appear for the receives $r_0$ and $r_1$ and the sends $s_3$ and $s_0$. 
+
+The message communication for a CTP can also be captured by collecting all the potential match pairs in a single set. This may associate more than one match pair with a send or a receive. For example, the receive $r_0$ has two match pairs $\langle r_0\ s_3\rangle$ and $\langle r_0\ s_0\rangle$ in the set. As such, the message communication for any feasible schedule for the CTP is captured by a subset of the match pairs where each send or receive is associated with a single match pair. This subset is called a resolution of the match pairs.
+The SMT encoding in the prior work is able to resolve a subset of all the match pairs with the rules that constrain the feasibility of the schedule. 
+
+
+
+
+
+
+

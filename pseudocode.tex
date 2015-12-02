@@ -1,0 +1,113 @@
+\section{Algorithm}
+\algoref{algo:main} describes the general structure of match pair generator in three steps: section match, sends distribution, and match pair approximation. 
+
+$\mathit{P}$ is a set of processes. $Src(p)$ is a set of identifiers for the source processes that may distribute sends to match the receives on process $p$. A source process may be removed from $Src(p)$ if no send can be distributed from the process.
+$R(p_{dest})$ is a list of all the receives in process $p_{dest}$. The order of the list is identical with that in the original program. $R(p_{dest})_j$ returns the $j$th. receive in the list.
+The function $N_r(p_{src},p_{dest})$ returns the number of all the receives in $R(p_{dest})$ with the source $p_{src}$. If $p_{src}$ is equal to ``$ALL$", $N_r(ALL ,p_{dest})$ represents the number of all the receives in $R(p_{dest})$.
+$S(p_{src},p_{dest})$ is a list of all the sends from the source $p_{src}$ to the destination $p_{dest}$. The order of the list is also identical with that in the original program. $S(p_{src},p_{dest})_i$ returns the $i$th. send in the list.
+The function $N_s(p_{src},p_{dest})$ returns the number of all the sends in $S(p_{src},p_{dest})$. 
+
+\begin{algorithm}
+\caption{Main Entrance}\label{algo:main}
+\begin{algorithmic}[1]
+\For{$p\in \mathit{P}$}
+\State $Src(p)\gets\{p_1,p_2,\ldots,p_x\}$   \Comment{a set of all the potential sources for process $p$}
+\While{$N_r(ALL,p)>0$}
+\State $N_K \gets \Call{min}{|Src(p)|\times\mathit{K}, N_r(ALL,p)}$
+\For{$i\gets1$ to $x$}
+\State $\mathit{n_s}(p_i,p)\gets 0$
+\EndFor
+\State $\mathit{n_s^\prime}\gets$\Call{DistributeSends}{$\mathit{n_s}$,$p$,$N_K$}
+\State $M\gets$\Call{MatchApprox}{$\mathit{n_s^\prime}$,$p$,$N_K$}
+\State \Call{remove}{$R(p)$,$N_K$} 
+%\State $R(p)\gets R(p)\setminus\{R(p)_i\mid 1\leq i\leq N_K\}$ 
+\For{$i\gets 1$ to $x$} 
+\State \Call{remove}{$S(p_i,p)$,$n_s(p_i,p)$}
+%\State $S(p_i,p)\gets S(p_i,p)\setminus\{S(p_i,p)_j\mid 1\leq j\leq\mathit{n_s}(p_i,p)\}$
+\EndFor
+\EndWhile
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm iterates over all the receives in each process $p$ until $N_r(ALL,p)$ is equal to zero at line 3 meaning that all the receives are removed from $R(p)$. 
+The first step is ``section match" that matches multiple sections among the receives in $R(p)$ and all the sends in $S(p_{i},p)$ for any potential source $p_{i}\in Src(p)$ given an input $K$. 
+The integer $\mathit{K}$ is used to compute the count of sends/receives ($N_K$) in each section at line 4. The function $\mathrm{MIN}$ returns the minimum of two values: $|Src(p)|\times\mathit{K}$ and $ N_r(ALL,p)$, indicating that each source in $Src(p)$ has $K$ sends in average to match the receives in $R(p)$ if possible, otherwise, the rest of the receives in $R(p)$ are all considered in the section. 
+
+The function $\mathit{n_s}(p_{i},p)$ returns the count of sends from $p_i$ to $p$ in a specific section. The count is initialized to zero for each potential source $p_i$ at line 6 and is computed in the function $\mathrm{DISTRIBUTESENDS}$ given the input $n_s$, $p$ and $N_K$ at line 8. The new count $n_s^\prime$ is then used to approximate the match pairs for a specific section in the function $\mathrm{MATCHAPPROX}$ given two additional input $p$ and $N_K$.
+The output $M$ stores the approximated match pairs. After that, the matched receives and sends in the section are removed from $R(p)$ and $S(p_i,p)$ at line 10 and line 12 respectively, indicating that they are not considered for match pair generation in the next section. The function $\mathrm{REMOVE}$ is used to remove a fixed number (the second input) of sends or receives from the beginning of a list (the first input). 
+ 
+
+\begin{algorithm}
+\caption{Distribute Sends}\label{algo:distribute}
+\begin{algorithmic}[1]
+\State $N\gets N_K$
+\For{$i\gets 1$ to $N_K$}
+%\If{$r$ is a deterministic receive}
+\State let $p_{r}$ be the source of the receive $R(p)_i$
+\If{$p_{r}\neq\ast$}
+\State $\mathit{n_s}(p_{r},p)\gets \mathit{n_s}(p_{r},p)+1$
+\State $N\gets N-1$   
+\If{$\mathit{n_s}(p_{r},p) = N_s(p_{r},p)$}
+\State $Src(p)\gets Src(p)\setminus\{p_{r}\}$
+\EndIf
+\EndIf
+%\EndIf
+\EndFor
+%\State $\mathit{avg}\gets (N_{snder}>0) ? N_{rest} / {N_{snder}} : N_{rest}$
+\While{$N>0$}
+\State $\mathit{avg}\gets N / {|Src(p)|}$
+\For{$p_{src}\in Src(p)$}
+%\If{$\mathit{n_s}(src,dest) < N_s(src,dest)$}
+\If{$\mathit{n_s}(p_{src},p)<\mathit{K}\vee (\forall p_{src}^\prime\in Src(p),\mathit{n_s}(p_{src},p)\leq\mathit{n_s}(p_{src}^\prime,p))$}
+\State $N_s^+ = \Call{min}{avg,N_s(p_{src},p)-\mathit{n_s}(p_{src},p)}$
+\State $\mathit{n_s}(p_{src},p)\gets\mathit{n_s}(p_{src},p)+N_s^+$
+\State $N\gets N-N_s^+$
+\If{$\mathit{n_s}(p_{src},p) = N_s(p_{src},p)$}
+\State $Src(p)\gets Src(p)\setminus\{p_{src}\}$
+\EndIf
+\EndIf
+%\EndIf
+\EndFor
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+
+\algoref{algo:distribute} implements the function $\mathrm{DISTRIBUTESENDS}$ in \algoref{algo:main} that computes the count of sends ($n_s$) for the common destination $p$ in a specific section. $N$ is the count of sends that are not distributed and is initialized to $N_K$ at line 1.The algorithm then runs in two phases. The first phase (line 2 to line 11) updates $n_s$ based on the count of deterministic receives. The second phase (line 12 to line 24) updates $n_s$ by averagely distributing sends from any potential source in $Src(p)$ until $N$ is equal to zero. 
+
+The first phase checks each receive in the section at line 2. If the source $p_r$ for the receive $R(p)_i$ is not equal to ``$\ast$" at line 4 meaning that $R(p)_i$ is a deterministic receive (the receive has a specific source), $n_s(p_r,p)$ is then incremented by one at line 5 and $N$ is reduced by one at line 6. The intuition is that for any deterministic receive with the source $p_r$, there has to be at least one send from $p_r$ to be distributed for the receive. If $n_s(p_r,p)$ is equal to $N_s(p_r,p)$ at line 7 indicating that all the sends from $p_r$ are distributed, then $p_r$ is removed from $Src(p)$ at line 8 indicating that it cannot be considered as a potential source for the destination $p$. 
+
+The second phase iteratively distributes the remaining sends from any potential source in $Src(p)$ until $N$ is equal to zero at line 12. It first calculates the variable $avg$ by dividing $N$ by the number of potential sources ($|Src(p)|$) at line 13. It then checks each potential source $p_{src}$ at line 14. The condition at line 15 specifies two cases that allow $p_{src}$ to distribute sends. The intuition is that the two cases is able to distributes approximately average number of sends from each potential source. The first case indicates that $n_s(p_{src},p)$ is less than the average count $K$. The second case indicates that $p_{src}$ has lower count in $n_s$ than that of any other potential source in $Src(p)$. 
+If the condition at line 15 is satisfied, the variable $N_s^+$ is assigned to the minimum of two values: $avg$ and $N_s(p_{src},p)-\mathit{n_s}(p_{src},p)$. The value indicates that the average number of sends are distributed if possible, otherwise, all the remaining sends from $p_{src}$ to $p$ are distributed.  
+The distribution is enforced by incrementing $n_s(p_{src},p)$ and reducing $N$ at line 17 and line 18 respectively. Similar to the first phase, $p_{src}$ can be removed from $Src(p)$ at line 20 if all the sends from $p_{src}$ to $p$ are distributed.  
+
+
+\begin{algorithm}
+\caption{Match Approximate}\label{algo:match}
+\begin{algorithmic}[1]
+\For{$i\gets 1$ to $N_K$}
+\State let $p_r$ be the source of the receive $R(p)_i$
+\For{$j\gets 1$ to $\mathit{n_s}(p_s,p)$ for any possible sender $p_s$}
+\If{$(p_r = \ast\vee p_r = p_s)\wedge i \geq j\wedge i \leq j + (N - \mathit{n_s}(p_s,p))$}
+\State $M\gets M\cup\{\langle R(p)_i,S(p_s,p)_j \rangle\}$
+\EndIf
+\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\algoref{algo:match} implements the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main} that approximates the match pairs for the receives in a common process $p$ in a specific section. The algorithm is inspired by the prior work \cite{} that uses ranks of sends and receives for match pair approximation. 
+
+The algorithm first checks each receive with the rank from $1$ to $N_K$ in $R(p)$ at line 1. $i$ is the rank of the receive $R(p)_i$. 
+For each receive, the algorithm checks each send with the rank from $1$ to $n_s(p_s,p)$ in $S(p_s,p)$ for each potential source $p_s$ at line 3.
+$j$ is the rank of the send $S(p_s,p)_j$ that. The condition at line 4 then uses the same rule of rank comparison in \cite{} to soundly prune the pair $\langle R(p)_i,S(p_s,p)_j\rangle$ that may never occur in the runtime. Also, the condition checks that $R(p)_i$ is either a wildcard receive (the receive may match a send from any source) or the source of $R(p)_i$ matches the source of $S(p_s,p)_j$.
+If the condition is satisfied, the pair is added to $M$ at line 5. 
+
+
+%The condition at line 4 is then used to soundly prune the pair of $R(p)_i$ and $S(p_s,p)_j$ if they never match in the runtime with three rules. The first rule indicates that $R(p)_i$ is either a wildcard receive (the receive that may match a send from any source) or the source of $R(p)_i$ matches the source of $S(p_s,p)_j$. The second rule indicates that $i$ is greater or equal to $j$ meaning that the sends preceding $S(p_s,p)_j$ in $S(p_s,p)$ have to be matched with the receives in $p$. 
+
+
+
+
+

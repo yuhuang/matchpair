@@ -1,0 +1,66 @@
+\newsavebox{\boxTZero}
+\begin{lrbox}{\boxTZero}
+\begin{minipage}[t]{0.4\linewidth}
+\large
+\begin{alltt}
+00 \(r\sb{0}(\ast\ 0\ A\ w\sb{0})\)
+01 \(w\sb{0}(r\sb{0})\)
+02 \(r\sb{1}(\ast\ 0\ B\ w\sb{1})\)
+03 \(w\sb{1}(r\sb{1})\)
+04 \(r\sb{2}(1\ 0\ C\ w\sb{2})\)
+05 \(w\sb{2}(r\sb{2})\)
+06 \(s\sb{5}(0\ 1)\)
+07 \(r\sb{3}(\ast\ 0\ D\ w\sb{3})\)
+08 \(w\sb{3}(r\sb{3})\)
+09 \(r\sb{4}(2\ 0\ E\ w\sb{4})\)
+0A \(w\sb{4}(r\sb{4})\)
+
+
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newsavebox{\boxTOne}
+\begin{lrbox}{\boxTOne}
+\begin{minipage}[t]{0.4\linewidth}
+\large
+\begin{alltt}
+10 \(s\sb{0}(1\ 0)\)
+11 \(s\sb{1}(1\ 0)\)
+12 \(r\sb{5}(0\ 1\ F\ w\sb{5})\)
+13 \(w\sb{5}(r\sb{5})\)
+14 \(s\sb{2}(1\ 0)\)
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newsavebox{\boxTTwo}
+\begin{lrbox}{\boxTTwo}
+\begin{minipage}[t]{0.4\linewidth}
+\large
+\begin{alltt}
+20 \(s\sb{3}(2\ 0)\)
+21 \(s\sb{4}(2\ 0)\)\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+% ---------------------------------------------------------------------
+% END Save boxes
+% ---------------------------------------------------------------------
+
+\newcommand\examplefigone{
+\begin{figure*}[tb]
+\begin{center}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}[t]{c|c|c}
+$\mathit{p_0}$ & $\mathit{p_1}$ & $\mathit{p_2}$ \\
+\hline
+\scalebox{0.8}{\usebox{\boxTZero}}&
+\scalebox{0.8}{\usebox{\boxTOne}} &
+\scalebox{0.8}{\usebox{\boxTTwo}}\\
+\end{tabular}
+\end{center}
+\caption{A deadlock caused by orphaned receive.}
+\label{fig:example}
+\end{figure*}
+}
