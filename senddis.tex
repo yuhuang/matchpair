@@ -1,5 +1,7 @@
 \section{Send Distribution}
 
+\algoref{algo:distribute} implements a possible way of distributing the potential sends to a specific section by computing the count of sends ($n_s$) for the common destination $p$. The algorithm is part of the function $\mathrm{DISTRIBUTESENDS}$ in \algoref{algo:main}. $N$ is the count of sends that are waiting to be distributed and is initialized to $N_K$ at line 1.The algorithm then runs in two phases. The first phase (line 2 to line 11) updates $n_s$ according to the count of the deterministic receives (the receive that has a specific source). The second phase (line 12 to line 24) updates $n_s$ by averagely distributing the sends from each potential source in $Src(p)$ to the section until $N$ is equal to zero indicating that the send distribution is finished for the section. 
+
 \begin{algorithm}
 \caption{Distribute Sends}\label{algo:distribute}
 \begin{algorithmic}[1]
@@ -35,9 +37,6 @@
 \end{algorithmic}
 \end{algorithm}
 
-
-\algoref{algo:distribute} implements a possible way of distributing the potential sends to a specific section by computing the count of sends ($n_s$) for the common destination $p$. The algorithm is part of the function $\mathrm{DISTRIBUTESENDS}$ in \algoref{algo:main}. $N$ is the count of sends that are waiting to be distributed and is initialized to $N_K$ at line 1.The algorithm then runs in two phases. The first phase (line 2 to line 11) updates $n_s$ according to the count of the deterministic receives (the receive that has a specific source). The second phase (line 12 to line 24) updates $n_s$ by averagely distributing the sends from each potential source in $Src(p)$ to the section until $N$ is equal to zero indicating that the send distribution is finished for the section. 
-
 The first phase checks each receive $R(p)_i$ in the section at line 3. If the source $p_r$ of $R(p)_i$ is not equal to ``$\ast$" at line 4 indicating that $R(p)_i$ is a deterministic receive, $n_s(p_r,p)$ is then incremented by one at line 5 and $N$ is reduced by one at line 6. The intuition is that for any deterministic receive with the source $p_r$, there has to be at least one send from $p_r$ to be distributed for the receive. If $n_s(p_r,p)$ is equal to $N_s(p_r,p)$ at line 7 indicating that all the sends from $p_r$ to $p$ are distributed, then $p_r$ is removed from $Src(p)$ at line 8 indicating that $p_r$ cannot be considered as a potential source for the destination $p$. 
 
 The second phase iteratively distributes the remaining $N$ sends from the potential sources in $Src(p)$ until $N$ is equal to zero at line 12. 
@@ -46,4 +45,8 @@ Each potential source $p_{s}$ is then checked at line 14.
 The condition at line 15 specifies two cases for $p_{s}$ to distribute sends. The intuition is that each potential source has to distribute an approximately average number of the sends in the two cases. The first case indicates that $n_s(p_{s},p)$ is less than the average count $K$. The second case indicates that $p_{s}$ has the lower count of sends in $n_s$ than that of any other potential source in $Src(p)$. 
 If the condition at line 15 is satisfied, the variable $N_s^+$ is assigned to the minimum of the two values: $avg$ and $N_s(p_{s},p)-\mathit{n_s}(p_{s},p)$. The value indicates that the $avg$ sends are distributed from $p_s$; or, if there are not enough sends, all the remaining sends from $p_{s}$ to $p$ are distributed.  
 The distribution is enforced by incrementing the value of $n_s(p_{s},p)$ and reducing the value of $N$ at line 17 and line 18 respectively. Similar to the first phase, $p_{s}$ is removed from $Src(p)$ at line 20 if all the sends from $p_{s}$ to $p$ are distributed.  
+
+\begin{lemma}
+\algoref{algo:distribute} distributes $N_K$ sends from multiple sources to a single section for matching the same number of receives in the section.
+\end{lemma}
 

@@ -38,30 +38,34 @@ Similarly, the function $N_s(p_{s},p)$ returns the number of all the sends in $S
 \end{algorithmic}
 \end{algorithm}
 
-The algorithm iteratively splits the receives in each process $p$ into multiple sections, distributes the potential sends to each section, and approximates the match pairs for each section until $N_r(ALL,p)$ is equal to zero at line 3 indicating that all the receives in $R(p)$ are matched.  The section is defined in \defref{def:section}.
+The algorithm iteratively splits the receives in each process $p$ into multiple sections, distributes the potential sends to each section, and approximates the match pairs for each section until $N_r(ALL,p)$ is equal to zero at line 3 indicating that all the receives in $R(p)$ are matched.  The \emph{section} is defined in \defref{def:section}.
 
 \begin{definition}
 A section for any process $p$ consists of a subsequence of the receives in $R(p)$ and several subsequences of the sends in $S(p_i,p)$ for any potential source $p_i\in Src(p)$.
 \label{def:section}
 \end{definition}
 
-$\mathrm{SECTIONMATCH}$ in (2) computes an integer as the size of the next section that is matched among the receives in $R(p)$ and all the sends in $S(p_{i},p)$ for any potential source $p_{i}\in Src(p)$ 
+$\mathrm{SECTIONMATCH}$ in (2) computes an integer as the size of the next section for the receives in $R(p)$ and all the sends in $S(p_{i},p)$ for any potential source $p_{i}\in Src(p)$ 
 given an input $K$. 
 \begin{equation}
 \Call{min}{|Src(p)|\times\mathit{K}, N_r(ALL,p)}
 \end{equation}
 The function $\mathrm{MIN}$ returns the minimum of the two values: $|Src(p)|\times\mathit{K}$ and $ N_r(ALL,p)$, indicating that the next section intends to match a subsequence of receives in $R(p)$ such that $K$ sends in average are distributed from each source in $Src(p)$ for matching these receives; or, if there are not enough receives in $R(p)$, the rest of the receives in $R(p)$ are all considered in the next section. $N_K$ is assigned to the size of the next section at line 4. 
 
-\begin{lemma}
-\algoref{algo:main} partitions all the sends and receives in a CTP into multiple sections; each send or receive is added in a single section.
-\end{lemma}
-\begin{proof}
-... 
-$\Box$
-\end{proof}
-
 %The integer $\mathit{K}$ is used to compute the count of sends/receives ($N_K$) in each section at line 4. 
 The function $\mathit{n_s}(p_{i},p)$ returns the count of the  sends from $p_i$ to $p$ in a specific section. The count is initialized to zero for each potential source $p_i$ at line 6 and is updated by the function $\mathrm{DISTRIBUTESENDS}$ given the input $n_s$, $p$ and $N_K$ at line 8. The new count $n_s^\prime$ is then used to approximate the match pairs for a specific section in the function $\mathrm{MATCHAPPROX}$ given two additional input $p$ and $N_K$.
 The output $M$ stores the approximated match pairs. After that, the matched receives and sends in the current section are removed from $R(p)$ and $S(p_i,p)$ at line 10 and line 12 respectively, indicating that they are not considered for match pair generation in the next section. The function $\mathrm{REMOVE}$ is used to remove a fixed number (designated by the second input) of sends or receives from the beginning of a sequence (designated by the first input). 
+\begin{lemma}
+\label{lemma:section}
+Each receive in a CTP is added to one and only one section by \algoref{algo:main}; each send in the CTP is also added to exactly one section if $\mathrm{DISTRIBUTESENDS}$ distributes the same number of sends to match the receives in any section.
+\end{lemma}
+\begin{proof}
+\algoref{algo:main} initializes $N_K$ the number of the receives in a single section by $\mathrm{SECTIONMATCH}$, and removes these receives from $R$ immediately after executing $\mathrm{MATCHAPPROXIMATE}$ at line 10. It is assumed that the same number of potential sends are distributed to the section by $\mathrm{DISTRIBUTESENDS}$ and are removed from $S$ at line 12. Therefore, a receive or a send can only be added once to a single section. 
+Further, \algoref{algo:main} exhaustively matches sections for all the receives in any process $p$ until $N_r(ALL,p)$ is equal to zero. Also, it is assumed that the number of sends is equal to the number of receives in a CTP. 
+%Each section also contains equivalent receives and sends. 
+Therefore, all the receives and sends in the CTP are partitioned into sections. 
+$\Box$
+\end{proof}
+\lemmaref{lemma:section} is used to prove the key theorem later in the paper.
 
 

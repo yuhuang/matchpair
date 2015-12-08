@@ -14,10 +14,9 @@
 \end{algorithmic}
 \end{algorithm}
 
-\algoref{algo:match} approximates the match pairs for the receives in a common process $p$ and the sends from multiple sources to $p$ in a specific section. 
+\algoref{algo:match} approximates the match pairs in a specific section that consists of a sequence of receives in a common process $p$ and multiple sequences of sends from the potential sources to $p$.
 The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main} and is inspired by the match pair generation algorithm in the prior work \cite{}. 
-
-Intuitively, the algorithm considers all the pairs of a receive and a send in a section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
+Intuitively, the algorithm checks all the potential match pairs for the receives and sends in the section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
 
 The algorithm first checks each receive $R(p)_i$ in a section at line 2. The subscript $i$ is the rank of $R(p)_i$. The process $p_r$ is the source of $R(p)_i$.
 For each receive, the algorithm checks the sends with the ranks from $1$ to $n_s(p_s,p)$ in the sequence $S(p_s,p)$ for each potential source $p_s$ at line 3.
@@ -30,7 +29,7 @@ If the condition is satisfied, the match pair is added to the set $M$ at line 5.
 \algoref{algo:match} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
 \end{lemma}
 \begin{proof}
-... $\Box$
+\algoref{algo:match} must never claim to be able to prune the precise match pairs. The algorithm considers all the pairs for a send and a receive in a specific section. Also, the condition at line 4 only prunes the pairs that may never occur in the runtime: the first rule validates the endpoints consistent for the send and the receive; the second and third rules validate the FIFO order in message delivery according to the semantics. Therefore, only unprecise match pairs are pruned. $\Box$
 \end{proof}
 
 
