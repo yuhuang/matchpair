@@ -22,6 +22,10 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
 
 \usepackage[flushleft]{threeparttable}
 \usepackage{footnote}
@@ -71,7 +75,8 @@
 \begin{abstract} 
 \input{abstract}
 \end{abstract}
-\keywords{Message Passing, MPI, SMT}
+
+\keywords{Message Passing, SMT}
 
 \input{example-defs}
 \input{introduction}

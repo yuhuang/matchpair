@@ -1,13 +1,23 @@
-\section{Coverage of Precise Match Pairs}
+\section{Coverage of Message Communication}
 
-\begin{definition}
-A subsection for any section $S$ consists of a subsequence of the receives in $S$ and several subsequences of the sends in $S$.
-\end{definition}
+%\begin{definition}
+%A subsection for any section $S$ consists of a subsequence of the receives in $S$ and several subsequences of the sends in $S$.
+%\end{definition}
 
-\begin{lemma}
-\algoref{algo:main} implies that the set of match pairs for any section $S$ includes all the match pairs for any subsection of $S$. 
-\end{lemma}
+%\begin{lemma}
+%\algoref{algo:main} implies that the set of match pairs for any section $S$ includes all the match pairs for any subsection of $S$. 
+%\end{lemma}
+As discussed earlier, a send and a receive from two different sections are not considered for matching. For example, the CTP in \figref{fig:example} can be partitioned into three sections for process $p_1$ given the input $K=1$. The first section consists of two receives, $r_0$ and $r_1$, and two sends, $s_0$ and $s_3$. The algorithm further generates four match pairs, $\langle r_0\ s_0\rangle$, $\langle r_0\ s_3\rangle$, $\langle r_1\ s_0\rangle$ and $\langle r_1\ s_3\rangle$, for the section. It is also possible for $r_1$ to match the sends $s_1$ or $s_4$ in the runtime, however, since the two sends are added to a different section, the algorithm does not generate the match pairs $\langle r_1\ s_1\rangle$ or $\langle r_1\ s_4\rangle$. To capture these two match pairs, the algorithm requires a larger input. For example, when $K=2$, the algorithm matches two sections for $p_0$. The first section consists of four receives and four sends. As such, $\mathrm{MATCHAPPROXIMATE}$ is able to generate the missed match pairs. 
 
+It is believed that the algorithm with a larger input $K$ is able to approximate more match pairs. Further, \thmref{theorem:precise} states that the precise match pairs for any CTP can be generated given an appropriate input $K$.
+The function $\mathrm{MAX}$ returns the maximum of a set of values given as parameters.
+ 
 \begin{theorem}
-The precise match pairs for any CTP can be over-approximated by \algoref{algo:main} given a bounded positive integer K.
+The complete set of the precise match pairs for any CTP can be over-approximated by \algoref{algo:main} given a positive integer $K \geq$ $\mathrm{MAX}$ $(\ceil*{\frac{N_r(ALL,p_1)}{|Src(p_1)|}},\ldots,\ceil*{\frac{N_r(ALL,p_{|P|})}{|Src(p_{|P|})|}})$.
+\label{theorem:precise}
 \end{theorem}
+\begin{proof}
+Since all the sends and receives are added to the sections matched by \algoref{algo:main} (\lemmaref{lemma:section}), the number of sends is equal to the number of receives for any section (\lemmaref{lemma:distribute}), and \algoref{algo:match} is able to over-approximate the precise match pairs for any section (\lemmaref{lemma:match}), the only way to approximate all the precise match pairs for any CTP is to add all the receives for any process to a single section. Therefore, the proof must claim that when $K \geq$ $\mathrm{MAX}$ $(\ceil*{\frac{N_r(ALL,p_1)}{|Src(p_1)|}},\ldots,\ceil*{\frac{N_r(ALL,p_{|P|})}{|Src(p_{|P|})|}})$, there is exactly one section matched for any process. According to (2), it is trivial to prove that $N_K = N_r(ALL,p)$ for any process $p$. As such, all the precise match pairs for any CTP can be over-approximated.
+$\Box$
+\end{proof}
+

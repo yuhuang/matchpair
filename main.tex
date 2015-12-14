@@ -57,7 +57,7 @@ The function $\mathit{n_s}(p_{i},p)$ returns the count of the  sends from $p_i$ 
 The output $M$ stores the approximated match pairs. After that, the matched receives and sends in the current section are removed from $R(p)$ and $S(p_i,p)$ at line 10 and line 12 respectively, indicating that they are not considered for match pair generation in the next section. The function $\mathrm{REMOVE}$ is used to remove a fixed number (designated by the second input) of sends or receives from the beginning of a sequence (designated by the first input). 
 \begin{lemma}
 \label{lemma:section}
-Each receive in a CTP is added to one and only one section by \algoref{algo:main}; each send in the CTP is also added to exactly one section if $\mathrm{DISTRIBUTESENDS}$ distributes the same number of sends to match the receives in any section.
+Each receive in a CTP is added to exactly one section by \algoref{algo:main}; each send in the CTP is also added to exactly one section if $\mathrm{DISTRIBUTESENDS}$ distributes the same number of sends to match the receives in any section.
 \end{lemma}
 \begin{proof}
 \algoref{algo:main} initializes $N_K$ the number of the receives in a single section by $\mathrm{SECTIONMATCH}$, and removes these receives from $R$ immediately after executing $\mathrm{MATCHAPPROXIMATE}$ at line 10. It is assumed that the same number of potential sends are distributed to the section by $\mathrm{DISTRIBUTESENDS}$ and are removed from $S$ at line 12. Therefore, a receive or a send can only be added once to a single section. 

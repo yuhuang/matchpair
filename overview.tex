@@ -32,9 +32,9 @@ A match pair, $\langle r\ s\rangle$, for a receive $r$ and a send $s$ correspond
 \end{definition} 
 If zero buffer semantics are applied, the \textit{happens-before} relation is further constrained for any match pair $\langle r\ s \rangle$ such that $s$ and $r$ are strictly ordered, meaning that there does not exist any operation $op$ such that $s \prec_{\mathtt{HB}} op$ and $op \prec_{\mathtt{HB}} r$. 
 
-\begin{lemma}
+\begin{definition}
 The match pair $\langle r\ s\rangle$ is precise if the receive $r$ is matched with the send $s$ in at least one feasible schedule.
-\end{lemma}
+\end{definition}
 
 %\begin{corollary}
 %The bogus match pair $\langle r\ s\rangle$ implies that the receive $r$ can not be matched with the send $s$ in any feasible schedule.
