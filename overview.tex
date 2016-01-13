@@ -17,7 +17,7 @@ The happens-before relation, denoted as $\prec_{\mathtt{HB}}$, is a partial orde
 Given two operations, $A$ and $B$, if $A$ must complete before $B$ in a valid program execution, then $A \prec_{\mathtt{HB}} B$ will be an SMT constraint. 
 The relation is derived from the program source and potential match pairs. 
 
-The SMT encoding specifies the constraints from the program source such that the operations in each process has to be sequentially ordered. The happens-before relation is used to define a list of rules for the constraint of sequential order. Please refer to the prior work \cite{} for the full definition of these rules. 
+The SMT encoding specifies the constraints from the program source such that the operations in each process has to be sequentially ordered. The happens-before relation is used to define a list of rules for the constraint of sequential order. Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13,HuangNFM15} for the full definition of these rules. 
 
 The SMT encoding also needs to express the message communication in the given match pairs.
 Informally, a match pair equates the shared components of a send and receive and constrains the send to happen before the nearest-enclosing wait of the receive. 
@@ -40,7 +40,7 @@ The match pair $\langle r\ s\rangle$ is precise if the receive $r$ is matched wi
 %The bogus match pair $\langle r\ s\rangle$ implies that the receive $r$ can not be matched with the send $s$ in any feasible schedule.
 %\end{corollary}
 
-The SMT problem in the prior work is given an over-approximated set of match pairs including all the precise match pairs and maybe some unprecise match pairs. Solving the problem needs to find one among all possible match pair resolutions that satisfies the constraints in the encoding. Consider the CTPs with large number of processes and high degree of message non-determinism, the number of match pair resolutions can be exponential. Therefore, the prior work does not scale for such a CTP. This paper presents a new approach that is able to generate a smaller set of match pairs, therefore, leading to a much more efficient SMT encoding.
+The SMT problem in the prior work is given an input set of match pairs including all the precise match pairs and maybe some unprecise match pairs. Solving the problem needs to find one among all possible match pair resolutions that satisfies the constraints in the encoding. Consider the CTPs with large number of processes and high degree of message non-determinism, the number of match pair resolutions can be exponential. Therefore, the prior work does not scale for such a CTP. This paper presents a new approach that is able to generate a smaller set of match pairs, therefore, leading to a much more efficient SMT encoding.
 
 
 
