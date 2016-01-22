@@ -1,35 +1,38 @@
-\section{Example}
+\section{Concurrent Trace Program Definition and Semantics}
 
 \examplefigone
 
-This section explains message communication in a simple CTP consisting of a handful of operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The send specifies two parameters: the source ID and the destination ID. The receive has three parameters: the source ID, the destination ID, and the ID of the nearest-enclosing wait. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
-Line numbers appear in the first column for each process. The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the algorithm in the paper.
+This section explains message communication in a simple CTP consisting of a handful of operations. The CTP only considers non-blocking semantics. Blocking semantics are equivalent to waiting after every operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The send specifies two parameters: the source ID and the destination ID. The receive has three parameters: the source ID, the destination ID, and the ID of the nearest-enclosing wait. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
+The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the algorithm in the paper.
 
 Picking up the scenario in \figref{fig:example}, process $p_1$ receives five messages from any source or the specific sources and sends one message to $p_2$; process $p_2$ sends three messages to $p_1$ and receives a message from $p_1$; and process $p_3$ sends two messages to $p_1$. 
 
 
-%The example shows that the behavior under infinite buffer semantics meaning that a message may be buffered in the system or in the application.
+a set of match-pairs represents a solution to the SMT problem from the prior work if that set of match-pairs is feasible. Feasible in this context means there exists a program trace allowed by the runtime that matches according to the solution set. In this example, the feasible program trace is equation (1). 
 
-
-Given the concurrency in the scenario, a feasible schedule is a sequence of operations where the order is consistent with the order of completion in a real execution. Equation (1) shows an instance of the feasible schedule. 
+Given the concurrency in the scenario, a feasible program trace is presented in equation (1).
 \begin{equation}
-\scriptsize
-s_0\rightarrow \langle r_0\ s_0\rangle \rightarrow s_3\rightarrow \langle r_1\ s_3\rangle \rightarrow s_1\rightarrow \langle r_2\ s_1\rangle \rightarrow 
-s_5\rightarrow \langle r_5\ s_5\rangle \rightarrow s_4\rightarrow \langle r_3\ s_4\rangle \rightarrow s_2\rightarrow \langle r_4\ s_2\rangle
+%\scriptsize
+\begin{split}
+s_0\rightarrow r_0\rightarrow w_0\langle r_0\ s_0\rangle \rightarrow s_3\rightarrow r_1\rightarrow w_1\langle r_1\ s_3\rangle \rightarrow s_1\rightarrow r_2\rightarrow w_2\langle r_2\ s_1\rangle \\
+\rightarrow s_5\rightarrow r_5\rightarrow w_5\langle r_5\ s_5\rangle \rightarrow s_4\rightarrow r_3\rightarrow w_3\langle r_3\ s_4\rangle \rightarrow s_2\rightarrow r_4\rightarrow w_4\langle r_4\ s_2\rangle
+\end{split}
 \end{equation} 
-Each pair of angle braces in equation (1) represents a match pair for a send and a receive. For example, the match pair $\langle r_0\ s_0\rangle$ means that the send $s_0$ matches the receive $r_0$ in the schedule. Also, the sends and receives in equation (1) are totally ordered for completion. For example,
-the arrow between the match pair $\langle r_0\ s_0\rangle$ and the send $s_3$ shows that $r_0$ is matched before $s_3$ is matched in the runtime. 
-As shown, the message communication for the schedule is captured by the match pairs in equation (1).
+In equation (1), the arrow ``$\rightarrow$" indicates the order of execution between two operations.
+The angle braces following a wait represents a match pair. For example, the match pair $\langle r_0\ s_0\rangle$ means that the send $s_0$ matches the receive $r_0$ at the wait $w_0$. As shown, the feasible trace in equation (1) implies a set of match pairs that represents a solution to the SMT problem from the prior work. The solution for equation (1) is $\{\langle r_0\ s_0\rangle, \langle r_1\ s_3\rangle, \langle r_2\ s_1\rangle, \langle r_5\ s_5\rangle, \langle r_3\ s_4\rangle, \langle r_4\ s_2\rangle\}$.
 
-Since the message delivery is non-deterministic for the use of wildcard receives, there exist other feasible schedules for the concurrency in \figref{fig:example} where the messages are delivered in different ways. For example,  the receive $r_0$ can be matched with the send $s_3$ instead of the send $s_0$ if $s_3$ arrives in $p_1$ earlier than $s_0$. As such, the message delivery for $r_0$ is non-deterministic and it is associated with two potential match pairs. 
+
+%Also, the sends and receives in equation (1) are totally ordered for completion. For example, the arrow between the match pair $\langle r_0\ s_0\rangle$ and the send $s_3$ shows that $r_0$ is matched before $s_3$ is matched in the runtime. 
+
+Since the message delivery is non-deterministic for the use of wildcard receives, there exist other feasible executions for the CTP in \figref{fig:example} where the receives are matched in different ways. For example,  the receive $r_0$ can be matched with the send $s_3$ instead of the send $s_0$ if $s_3$ arrives in $p_1$ earlier than $s_0$. As such, the message delivery for $r_0$ is non-deterministic and it is associated with two potential match pairs. 
 Given the message non-determinism, the message communication can be resolved in many (and possibly exponential) ways. 
 %Therefore, it is possible to capture all the message communication in a CTP only by adding all the potential match pairs in a single set. 
-Therefore, to capture other schedules for a CTP, more potential match pairs need to be considered.
-For example, there is another schedule in equation (2) that makes the CTP in \figref{fig:example} deadlock. 
+Therefore, to capture the behavior in other executions, the new match pairs need to be considered.
+For example, another feasible execution is presented in equation (2). As shown, the CTP in \figref{fig:example} deadlocks for this trace. 
 \begin{equation}
-\scriptsize
-s_0\rightarrow \langle r_0\ s_0\rangle \rightarrow s_1\rightarrow \langle r_1\ s_1\rangle \rightarrow s_3\rightarrow s_4 \rightarrow (\mathrm{Deadlock})
+%\scriptsize
+s_0\rightarrow r_0\rightarrow w_0\langle r_0\ s_0\rangle \rightarrow s_1\rightarrow r_1\rightarrow w_1\langle r_1\ s_1\rangle \rightarrow s_3\rightarrow s_4 \rightarrow (\mathrm{Deadlock})
 \end{equation} 
-As shown, the deadlock occurs because there is no way to match the receives $r_2$ and $r_5$ after the sends $s_3$ and $s_4$ are issued. The use of the new match pair $\langle r_1\ s_1\rangle$ is essential to find the schedule in equation (2).
-The goal of the new algorithm in this paper is to generate a possibly small set of match pairs that consists of the ones such as $\langle r_1\ s_1\rangle$ in equation (2) that can be used to find the schedules for hidden errors.
+The deadlock occurs because there is no way to match the receives $r_2$ and $r_5$ after the sends $s_3$ and $s_4$ are issued. The use of the new match pair $\langle r_1\ s_1\rangle$ is essential to find the execution in equation (2) that makes the CTP in \figref{fig:example} deadlock.
+The goal of the new algorithm in this paper is to generate a reduced set of the precise match pairs that can be used to find such a trace with hidden errors.
 
