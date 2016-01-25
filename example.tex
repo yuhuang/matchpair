@@ -2,15 +2,14 @@
 
 \examplefigone
 
-This section explains message communication in a simple CTP consisting of a handful of operations. The CTP only considers non-blocking semantics. Blocking semantics are equivalent to waiting after every operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The send specifies two parameters: the source ID and the destination ID. The receive has three parameters: the source ID, the destination ID, and the ID of the nearest-enclosing wait. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
-The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the algorithm in the paper.
+This section explains message communication in a simple CTP consisting of a handful of operations. The CTP only considers non-blocking semantics. Blocking semantics are equivalent to waiting after every operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The send specifies two parameters: the source ID and the destination ID. The source, represented as ``from" in \figref{fig:example}, means where the message come from. Similarly, the destination, represented as ``to" in \figref{fig:example}, means where the message is going to. The receive has three parameters: the source ID, the destination ID, and the ID of the nearest-enclosing wait. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
+%The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the algorithm in the paper.
 
 Picking up the scenario in \figref{fig:example}, process $p_1$ receives five messages from any source or the specific sources and sends one message to $p_2$; process $p_2$ sends three messages to $p_1$ and receives a message from $p_1$; and process $p_3$ sends two messages to $p_1$. 
 
 
-a set of match-pairs represents a solution to the SMT problem from the prior work if that set of match-pairs is feasible. Feasible in this context means there exists a program trace allowed by the runtime that matches according to the solution set. In this example, the feasible program trace is equation (1). 
-
-Given the concurrency in the scenario, a feasible program trace is presented in equation (1).
+A set of match pairs represents a solution to the SMT problem from the prior work if that set of match pairs is feasible. Feasible in this context means there exists a program trace allowed by the runtime that matches according to the solution set. In this example, the feasible program trace is equation (1). 
+%Given the concurrency in the scenario, a feasible program trace is presented in equation (1).
 \begin{equation}
 %\scriptsize
 \begin{split}
@@ -18,8 +17,9 @@ s_0\rightarrow r_0\rightarrow w_0\langle r_0\ s_0\rangle \rightarrow s_3\rightar
 \rightarrow s_5\rightarrow r_5\rightarrow w_5\langle r_5\ s_5\rangle \rightarrow s_4\rightarrow r_3\rightarrow w_3\langle r_3\ s_4\rangle \rightarrow s_2\rightarrow r_4\rightarrow w_4\langle r_4\ s_2\rangle
 \end{split}
 \end{equation} 
-In equation (1), the arrow ``$\rightarrow$" indicates the order of execution between two operations.
-The angle braces following a wait represents a match pair. For example, the match pair $\langle r_0\ s_0\rangle$ means that the send $s_0$ matches the receive $r_0$ at the wait $w_0$. As shown, the feasible trace in equation (1) implies a set of match pairs that represents a solution to the SMT problem from the prior work. The solution for equation (1) is $\{\langle r_0\ s_0\rangle, \langle r_1\ s_3\rangle, \langle r_2\ s_1\rangle, \langle r_5\ s_5\rangle, \langle r_3\ s_4\rangle, \langle r_4\ s_2\rangle\}$.
+%In equation (1), the arrow ``$\rightarrow$" indicates the order of execution between two operations.
+%The angle braces following a wait represents a match pair. For example, the match pair $\langle r_0\ s_0\rangle$ means that the send $s_0$ matches the receive $r_0$ at the wait $w_0$. 
+As shown, the feasible trace in equation (1) implies a set of match pairs that represents a solution to the SMT problem from the prior work. The solution for equation (1) is $\{\langle r_0\ s_0\rangle, \langle r_1\ s_3\rangle, \langle r_2\ s_1\rangle, \langle r_5\ s_5\rangle, \langle r_3\ s_4\rangle, \langle r_4\ s_2\rangle\}$.
 
 
 %Also, the sends and receives in equation (1) are totally ordered for completion. For example, the arrow between the match pair $\langle r_0\ s_0\rangle$ and the send $s_3$ shows that $r_0$ is matched before $s_3$ is matched in the runtime. 
