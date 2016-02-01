@@ -1,37 +1,48 @@
-\section{Match Pair Approximation}
+\subsection{Match Pair Approximation}
 
-\algoref{algo:match} approximates the match pairs in a specific section that consists of a sequence of receives in a common process $p$ and multiple sequences of sends from the potential sources to $p$.
+\algoref{algo:match} approximates the match pairs for the sends and receives in a specific section.
 The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main} and is inspired by the match pair generation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13}. 
-Intuitively, the algorithm checks all the potential match pairs for the receives and sends in the section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
+Intuitively, the algorithm checks all the pairs of receives and sends in a single section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
 
 \begin{algorithm}
 \caption{Match Approximate}\label{algo:match}
 \begin{algorithmic}[1]
-\For{$i\gets 1$ to $N_K$}
-\State let $p_r$ be the source of the receive $R(p)_i$
-\For{$j\gets 1$ to $\mathit{n_s}(p_s,p)$ for each possible sender $p_s$}
-\If{$(p_r = \ast\vee p_r = p_s)\wedge i \geq j\wedge i \leq j + (N_K - \mathit{n_s}(p_s,p))$}
-\State $M\gets M\cup\{\langle R(p)_i,S(p_s,p)_j \rangle\}$
+\State let $R_t$ be the list $r_0,r_1,\ldots,r_n$
+\For{$i\gets 0$ to $N_k-1$}
+\State let $p_f$ be the source of the receive $r_i$
+\State let $S_{tf}$ be the list $s_0,s_1,\ldots,s_m$ for each sender $p_f$
+\For{$j\gets 0$ to $\mathit{NS_{tf}}-1$}
+\If{$(p_t = \ast\vee p_t = p_f)\wedge i \geq j\wedge i \leq j + (N_k - \mathit{NS_{tf}})$}
+\State $M\gets M\cup\{\langle r_i\ s_j \rangle\}$
 \EndIf
 \EndFor
 \EndFor
 \end{algorithmic}
 \end{algorithm}
 
-The algorithm first checks each receive $R(p)_i$ in a section at line 2. The subscript $i$ is the rank of $R(p)_i$. The process $p_r$ is the source of $R(p)_i$.
-For each receive, the algorithm checks the sends with the ranks from $1$ to $n_s(p_s,p)$ in the sequence $S(p_s,p)$ for each potential source $p_s$ at line 3.
-The subscript $j$ is the rank of the send $S(p_s,p)_j$. 
+The algorithm first checks each receive $r_i$ in a single section at line 2. The subscript $i$ represents the receive's position in $R_t$, and is named the rank of $r_i$. 
+%The process $p_r$ is the source of $r_i$.
+For each receive $r_i$, the algorithm checks the distributed sends from each sender $p_f$ at line 3. As only the first $\mathit{NS_{tf}}$ sends in $S_{tf}$ are distributed to the section, the subscript $j$ represents the send's position between $0$ and $\mathit{NS_{tf}}-1$, and similarly, is named the rank of $s_j$.
 
-The condition at line 4 soundly prunes the match pair $\langle R(p)_i,S(p_s,p)_j\rangle$ that may never occur in the runtime with three rules. The first rule constrains the match pair in that either $R(p)_i$ is a wildcard receive or $R(p)_i$ and $S(p_s,p)_j$ have an identical source. The second rule and the third rule assert that the messages from a common source are received in a FIFO order. In precise, the second rule constrains that the rank of $R(p)_i$ is greater or equal to the rank of $S(p_s,p)_j$, indicating that the early messages from $p_s$ must be received by the preceding receives in $p$. The third rule also constrains the rank of $R(p)_i$ and the rank of $S(p_s,p)_j$, but in a more complex structure of an inequation. It asserts that there are a sufficient number of sends to match the preceding receives in $p$. This number, $j + (N_K - \mathit{n_s}(p_s,p))$, is estimated by considering all the potential sends including $j$ preceding sends from $p_s$ to $p$ and all the sends from other sources to $p$.
-If the condition is satisfied, the match pair is added to the set $M$ at line 5. Note that \algoref{algo:match} is not complete meaning that the unprecise match pairs may be added to $M$.
+The condition at line 6 soundly prunes the match pairs that may never occur in the runtime with three rules. To determine if the receive $r_i$ and the send $s_j$ can be matched, the first rule requires that either $r_i$ is a wildcard receive or $r_i$ and $s_j$ matches for an identical sender. 
+The second rule and the third rule constrain the ranks of $r_i$ and $s_j$, such that the messages from a common sender are received in a FIFO order. 
+In precise, the second rule constrains that $i$ is greater or equal to $j$, indicating that the early messages from $p_f$ must be received by the preceding receives in $p_t$. 
+The third rule also constrains the ranks of $r_i$ and $s_j$, but in a more complex structure of inequation. 
+It checks whether there are sufficient sends matching the preceding receives in $p_t$. 
+This number, $j + (N_k - \mathit{NS_{tf}})$, is estimated by considering the first $j$ sends from $p_f$ to $p_t$ and all the sends from other senders to $p_t$.
+If the condition is satisfied, the match pair $\langle r_i\ s_j\rangle$ is added to the set $M$ at line 7. 
+%Note that \algoref{algo:match} may add unprecise match pairs to $M$.
+
+\algoref{algo:match} implies the ``match over-approximation" property in the prior work \cite{DBLP:conf/kbse/HuangMM13}. The paper presents this property in \lemmaref{lemma:match}. 
 
 \begin{lemma}
 \algoref{algo:match} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
 \label{lemma:match}
 \end{lemma}
-\begin{proof}
-\algoref{algo:match} must never claim to be able to prune the precise match pairs. The algorithm considers all the pairs for a send and a receive in a specific section. Also, the condition at line 4 only prunes the pairs that may never occur in the runtime: the first rule validates the endpoints consistent for the send and the receive; the second and third rules validate the FIFO order in message delivery according to the semantics. Therefore, only unprecise match pairs are pruned. $\Box$
-\end{proof}
+
+%\begin{proof}
+%\algoref{algo:match} must never claim to be able to prune the precise match pairs. The algorithm considers all the pairs for a send and a receive in a specific section. Also, the condition at line 4 only prunes the pairs that may never occur in the runtime: the first rule validates the endpoints consistent for the send and the receive; the second and third rules validate the FIFO order in message delivery according to the semantics. Therefore, only unprecise match pairs are pruned. $\Box$
+%\end{proof}
 
 
 %The condition at line 4 is then used to soundly prune the pair of $R(p)_i$ and $S(p_s,p)_j$ if they never match in the runtime with three rules. The first rule indicates that $R(p)_i$ is either a wildcard receive (the receive that may match a send from any source) or the source of $R(p)_i$ matches the source of $S(p_s,p)_j$. The second rule indicates that $i$ is greater or equal to $j$ meaning that the sends preceding $S(p_s,p)_j$ in $S(p_s,p)$ have to be matched with the receives in $p$. 
