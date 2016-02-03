@@ -71,7 +71,7 @@ The first number indicates that the algorithm, if possible, distributes roughly 
 Each receive in a CTP is added to exactly one section by \algoref{algo:main}; each send in the CTP is also added to exactly one section if $\mathrm{DISTRIBUTESENDS}$ distributes the same number of sends to match the receives in any section.
 \end{lemma}
 \begin{proof}
-\algoref{algo:main} initializes $N_k$ the number of the receives in a single section by $\mathrm{SECTIONMATCH}$, and removes these receives from $R_t$ immediately after executing $\mathrm{MATCHAPPROXIMATE}$ at line 8. It is assumed that the same number of potential sends are distributed to the section by $\mathrm{DISTRIBUTESENDS}$ and are removed from $S_{tf^\prime}$ for each potential sender $p_{f^\prime}$ at line 12. Therefore, a receive or a send can only be added once. 
+\algoref{algo:main} initializes $N_k$ the number of the receives in a single section by $\mathrm{SECTIONMATCH}$, and removes these receives from $R_t$ immediately after executing $\mathrm{MATCHAPPROX}$ at line 8. It is assumed that the same number of potential sends are distributed to the section by $\mathrm{DISTRIBUTESENDS}$ and are removed from $S_{tf^\prime}$ for each potential sender $p_{f^\prime}$ at line 12. Therefore, a receive or a send can only be added once. 
 Further, \algoref{algo:main} exhaustively matches sections for all the receives in any process $p_t$ until $\mathit{NR}_{t}$ is equal to zero. 
 %Also, it is assumed that the number of sends is equal to the number of receives in a CTP. 
 %Each section also contains equivalent receives and sends. 

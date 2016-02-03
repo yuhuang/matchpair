@@ -1,37 +1,13 @@
 \subsection{Match Pair Approximation}
 
 \algoref{algo:match} approximates the match pairs for the sends and receives in a specific section.
-The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main} and is inspired by the match pair generation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13}. 
-Intuitively, the algorithm checks all the pairs of receives and sends in a single section, and prunes obvious matches that cannot exist in any runtime implementation of the specification.
+The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main}. 
+The match pair generation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is directly applied to the sends and receives for a specific section. 
+Intuitively, the algorithm checks all the pairs of receives and sends in the section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
+A rank of a receive is its position in the receive list for the section. 
+A rank of a send is its position in the send list from a particular sender to the section.    
+Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13} for more detail of the algorithm. 
 
-\begin{algorithm}
-\caption{Match Approximate}\label{algo:match}
-\begin{algorithmic}[1]
-\State let $R_t$ be the list $r_0,r_1,\ldots,r_n$
-\For{$i\gets 0$ to $N_k-1$}
-\State let $p_f$ be the source of the receive $r_i$
-\State let $S_{tf}$ be the list $s_0,s_1,\ldots,s_m$ for each sender $p_f$
-\For{$j\gets 0$ to $\mathit{NS_{tf}}-1$}
-\If{$(p_t = \ast\vee p_t = p_f)\wedge i \geq j\wedge i \leq j + (N_k - \mathit{NS_{tf}})$}
-\State $M\gets M\cup\{\langle r_i\ s_j \rangle\}$
-\EndIf
-\EndFor
-\EndFor
-\end{algorithmic}
-\end{algorithm}
-
-The algorithm first checks each receive $r_i$ in a single section at line 2. The subscript $i$ represents the receive's position in $R_t$, and is named the rank of $r_i$. 
-%The process $p_r$ is the source of $r_i$.
-For each receive $r_i$, the algorithm checks the distributed sends from each sender $p_f$ at line 3. As only the first $\mathit{NS_{tf}}$ sends in $S_{tf}$ are distributed to the section, the subscript $j$ represents the send's position between $0$ and $\mathit{NS_{tf}}-1$, and similarly, is named the rank of $s_j$.
-
-The condition at line 6 soundly prunes the match pairs that may never occur in the runtime with three rules. To determine if the receive $r_i$ and the send $s_j$ can be matched, the first rule requires that either $r_i$ is a wildcard receive or $r_i$ and $s_j$ matches for an identical sender. 
-The second rule and the third rule constrain the ranks of $r_i$ and $s_j$, such that the messages from a common sender are received in a FIFO order. 
-In precise, the second rule constrains that $i$ is greater or equal to $j$, indicating that the early messages from $p_f$ must be received by the preceding receives in $p_t$. 
-The third rule also constrains the ranks of $r_i$ and $s_j$, but in a more complex structure of inequation. 
-It checks whether there are sufficient sends matching the preceding receives in $p_t$. 
-This number, $j + (N_k - \mathit{NS_{tf}})$, is estimated by considering the first $j$ sends from $p_f$ to $p_t$ and all the sends from other senders to $p_t$.
-If the condition is satisfied, the match pair $\langle r_i\ s_j\rangle$ is added to the set $M$ at line 7. 
-%Note that \algoref{algo:match} may add unprecise match pairs to $M$.
 
 \algoref{algo:match} implies the ``match over-approximation" property in the prior work \cite{DBLP:conf/kbse/HuangMM13}. The paper presents this property in \lemmaref{lemma:match}. 
 
