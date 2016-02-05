@@ -1,18 +1,16 @@
 \subsection{Match Pair Approximation}
 
-\algoref{algo:match} approximates the match pairs for the sends and receives in a specific section.
-The algorithm is the part of the function $\mathrm{MATCHAPPROX}$ in \algoref{algo:main}. 
-The match pair generation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is directly applied to the sends and receives for a specific section. 
+$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} directly applies the over-approximation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} to generate the match pairs for the sends and receives in a specific section.
 Intuitively, the algorithm checks all the pairs of receives and sends in the section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
 A rank of a receive is its position in the receive list for the section. 
 A rank of a send is its position in the send list from a particular sender to the section.    
 Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13} for more detail of the algorithm. 
 
 
-\algoref{algo:match} implies the ``match over-approximation" property in the prior work \cite{DBLP:conf/kbse/HuangMM13}. The paper presents this property in \lemmaref{lemma:match}. 
+$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} implies the ``match over-approximation" property in the prior work \cite{DBLP:conf/kbse/HuangMM13}. The paper presents this property in \lemmaref{lemma:match}. 
 
 \begin{lemma}
-\algoref{algo:match} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
+$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
 \label{lemma:match}
 \end{lemma}
 
