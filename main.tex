@@ -35,6 +35,59 @@ Intuitively, the algorithm sections each process, where each section contains a 
 \end{algorithmic}
 \end{algorithm}
 
+
+
+\begin{comment}
+
+\begin{algorithm}
+\caption{Main Entrance}\label{algo:main}
+\begin{algorithmic}[1]
+\For{$p_t\in \mathit{P}$}
+\State let $R_t$ be the sequence of receives in $p_t$
+\State let $S_t$ be the set of sequences of sends where each sequence contains the sends from a specific sender to $p_t$
+\While{$|R_t|>0$}
+\State $N_k\gets$\Call{SectionMatch}{$\mathit{k}$}
+\State $(P_r,P_s)\gets$\Call{DistributeSends}{$R_t$,$S_t$,$N_k$}
+\State $M\gets$\Call{MatchApprox}{$P_r$,$P_s$}
+\EndWhile
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure*}[tb]
+\centering
+\scalebox{0.8}{
+\mprset{flushleft}
+\begin{mathpar}
+\inferrule[Deterministic Receive Command]
+{
+\mathit{frm}(r_0) = p_f \\ P_r = (r_a \ldots \bot) \\ P_r^\prime =  (r_0\ r_a\ \ldots \bot) \\
+P_s(f) = (s_b\ \ldots\ \bot) \\ P_s^\prime = P_s[f\rightarrow(s_{f0}\ s_b\ \ldots\ \bot)] \\
+N_k^\prime = N_k-1
+}{
+((r_0\ r_1\ \ldots\ \bot)\ ((0\rightarrow(s_0\ s_1\ \ldots\ \bot))\ \ldots (f\rightarrow(s_{f0}\ s_{f1}\ \ldots\ \bot))\ \ldots \bot)\ P_r\ P_s\ N_k)
+\reduce{m} \\
+((r_1\ \ldots\ \bot)\ ((0\rightarrow(s_0\ s_1\ \ldots\ \bot))\ \ldots (f\rightarrow(s_{f1}\ \ldots\ \bot))\ \ldots \bot)\ P_r^\prime\ P_s^\prime\ N_k^\prime)
+}
+\and
+\inferrule[Wildcard Receive Command]
+{
+\mathit{frm}(r_0) = \ast \\ P_r = (r_a \ldots \bot) \\ P_r^\prime =  (r_0\ r_a\ \ldots \bot) \\
+\forall f^\prime\in \mathit{frm}_t, P_s(f)\le P_s(f^\prime) \\ P_s(f) = (s_b\ \ldots\ \bot) \\ P_s^\prime = P_s[f\rightarrow(s_{f0}\ s_b\ \ldots\ \bot)] \\
+N_k^\prime = N_k-1
+}{
+((r_0\ r_1\ \ldots\ \bot)\ ((0\rightarrow(s_0\ s_1\ \ldots\ \bot))\ \ldots (f\rightarrow(s_{f0}\ s_{f1}\ \ldots\ \bot))\ \ldots \bot)\ P_r\ P_s\ N_k)
+\reduce{m} \\
+((r_1\ \ldots\ \bot)\ ((0\rightarrow(s_0\ s_1\ \ldots\ \bot))\ \ldots (f\rightarrow(s_{f1}\ \ldots\ \bot))\ \ldots \bot)\ P_r^\prime\ P_s^\prime\ N_k^\prime)
+}
+\end{mathpar}
+}
+\caption{Machine reductions ($\reduce{m}$). }
+\label{fig:machine}
+\end{figure*}
+
+\end{comment}
+
 At a low level, the presentation needs to first explain a few data structures that are essential to the algorithm.
 $\mathit{P}$ is a set of all the processes in a CTP. 
 $frm_t$ is a set of the unique identifiers of all the senders for the receiver $p_t$. 

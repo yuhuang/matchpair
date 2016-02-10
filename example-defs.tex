@@ -1,3 +1,5 @@
+\newcommand{\reduce}[1]{\ensuremath{\rightarrow_{#1}}}
+
 \newsavebox{\boxTZero}
 \begin{lrbox}{\boxTZero}
 \begin{minipage}[t]{0.4\linewidth}
@@ -63,3 +65,77 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 \label{fig:example}
 \end{figure*}
 }
+
+\newsavebox{\TemplateboxTZero}
+\begin{lrbox}{\TemplateboxTZero}
+\begin{minipage}[t]{0.4\linewidth}
+\large
+\begin{alltt}
+\(r\sb{0}(from \ast, to p\sb{r}, w\sb{0})\)
+\(w\sb{0}(r\sb{0})\)
+\(r\sb{1}(from \ast, to p\sb{r}, w\sb{1})\)
+\(w\sb{1}(r\sb{1})\)
+\ldots
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newsavebox{\TemplateboxTOne}
+\begin{lrbox}{\TemplateboxTOne}
+\begin{minipage}[t]{0.35\linewidth}
+\large
+\begin{alltt}
+\(s\sb{0}(from p\sb{1}, to p\sb{r})\)
+\(s\sb{1}(from p\sb{1}, to p\sb{r})\)
+\ldots
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newsavebox{\TemplateboxTTwo}
+\begin{lrbox}{\TemplateboxTTwo}
+\begin{minipage}[t]{0.05\linewidth}
+\large
+\begin{alltt}
+\ldots
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newsavebox{\TemplateboxTThree}
+\begin{lrbox}{\TemplateboxTThree}
+\begin{minipage}[t]{0.35\linewidth}
+\large
+\begin{alltt}
+\(s\sb{m0}(from p\sb{m}, to p\sb{r})\)
+\(s\sb{m1}(from p\sb{m}, to p\sb{r})\)
+\ldots
+\end{alltt}
+\end{minipage}
+\end{lrbox}
+
+\newcommand\examplefigtemplate{
+\begin{figure*}[tb]
+\begin{center}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}[t]{c|c|c|c}
+$\mathit{p_r}$ & $\mathit{p_1}$ & $\ldots$ &$\mathit{p_m}$ \\
+\hline
+\scalebox{0.8}{\usebox{\TemplateboxTZero}}&
+\scalebox{0.8}{\usebox{\TemplateboxTOne}} &
+\scalebox{0.8}{\usebox{\TemplateboxTTwo}} &
+\scalebox{0.8}{\usebox{\TemplateboxTThree}}
+
+\end{tabular}
+\end{center}
+\caption{A template concurrent trace prorgam.}
+\label{fig:Texample}
+\end{figure*}
+}
+
+
+
+
+
+
+
