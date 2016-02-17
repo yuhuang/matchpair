@@ -8,6 +8,64 @@
 \algoref{algo:main} describes the general structure of the approach in this paper.
 Intuitively, the algorithm sections each process, where each section contains a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
+\begin{comment}
+Sections = {}
+cur = {}
+
+while | R | \neq 0 {
+  r = dequeue(R);
+  S = ()
+  if from(r) = * 
+     Let S be such that \forall S' \in {S_i, S_j, ...} (count(S) \lte count(S’)) and | S | \neq 0)
+	  count(S) += 1
+  else
+     Let S be such that S = Sender(r)
+
+  cur = cur \cup {r, dequeue(S)}
+  if \forall S \in {S_i, S_j, ...} (count(S) = k \vee |S| = 0 \vee | R | = 0)
+     Sections  = Sections \cup {cur}
+	  cur = {}
+	  \forall S \in {S_i, S_j, ...} count(S) = 0;
+}
+\end{comment}
+
+
+let $\mathit{sender}$ be a set of lists $\{S_i, S_j, …\}$ that is the sends directed to the process grouped by the sending process.
+
+\begin{algorithm}
+\caption{Main Entrance}\label{algo:main}
+\begin{algorithmic}[1]
+%\State $S\gets\emptyset$
+\State $N_K\gets|\mathit{sender}|\times K$
+\While{$|R|>0$}
+\State $r \gets$ \Call{dequeue}{R}
+\State $N_r\gets N_r+1$
+\If{\Call{frm}{r}$=\ast$}
+\State let $S$ be such that $\forall S^\prime \in \mathit{sender}(0<|S|\le |S^\prime| )$
+\Else 
+\State let $S$ be the sender of $r$
+\EndIf
+\State $s\gets$ \Call{dequeue}{$S$}
+\If{$|S|=0$}
+\State $\mathit{sender}\gets\mathit{sender} \setminus \{S\}$
+\EndIf
+%\State $S_i\gets S_i\cup\{s\}$ 
+\State $\mathit{cur}\gets \mathit{cur}\cup \{r,s\}$
+\If{$N_r=N_K \wedge |R|=0$}
+\State $\mathit{sections}\gets\mathit{sections}\cup\{\mathit{cur}\}$
+\State $\mathit{cur}\gets\emptyset$
+%\State $\forall S \in\{S_1,S_2,\ldots\}S\gets\emptyset$
+\State $N_r\gets 0$
+\State $N_K\gets|\mathit{sender}|\times K$
+\EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{comment}
+
 \begin{algorithm}
 \caption{Main Entrance}\label{algo:main}
 \begin{algorithmic}[1]
@@ -35,7 +93,7 @@ Intuitively, the algorithm sections each process, where each section contains a 
 \end{algorithmic}
 \end{algorithm}
 
-
+\end{comment}
 
 \begin{comment}
 
