@@ -2,10 +2,10 @@
 
 \examplefigone
 
-This section explains message communication in a simple CTP consisting of a handful of operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the source ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any source. 
+This section explains message communication in a simple CTP consisting of a handful of operations. Consider the CTP in \figref{fig:example} that includes three processes that use non-blocking send ($s$) and non-blocking receive ($r$) for message communication. The nearest-enclosing wait ($w$) witnesses the completion of the receive \cite{DBLP:conf/kbse/HuangMM13}. The completion of any send or receive, is only confirmed when the send or the receive is matched in the runtime. Note that if the sender ID for a receive is ``$\ast$", then the receive is wildcard meaning that it may match a send from any sender. 
 %The declarations of the local variables are omitted for space. The other operations related to computation are also omitted because they are not essential to the algorithm in the paper.
 
-Picking up the scenario in \figref{fig:example}, process $p_1$ receives five messages from any source or the specific sources and sends one message to $p_2$; process $p_2$ sends three messages to $p_1$ and receives a message from $p_1$; and process $p_3$ sends two messages to $p_1$. 
+Picking up the scenario in \figref{fig:example}, process $p_1$ receives five messages from any sender or the specific senders and sends one message to $p_2$; process $p_2$ sends three messages to $p_1$ and receives a message from $p_1$; and process $p_3$ sends two messages to $p_1$. 
 
 
 A set of match pairs represents a solution to the SMT problem if that set of match pairs is feasible. 

@@ -5,8 +5,11 @@
 %receive list $R(p_{dest})$
 %send list $S(p_{src}, p_{dest})$
 
-\algoref{algo:main} describes the general structure of the approach in this paper.
-Intuitively, the algorithm sections each process, where each section contains a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
+%This section describes the general structure of the approach in this paper.
+\algoref{algo:main} presents how to generate match pairs for each process in a CTP. 
+Intuitively, the algorithm sections each process, where each section contains a number of sequential receives. For each section, the algorithm distributes the same number of sends from multiple sender processes to match the receives in each section. Finally, the divided sections consisting of only sends and receives are input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
+
+%a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
 \begin{comment}
 Sections = {}
@@ -30,13 +33,11 @@ while | R | \neq 0 {
 \end{comment}
 
 
-let $\mathit{sender}$ be a set of lists $\{S_i, S_j, …\}$ that is the sends directed to the process grouped by the sending process.
-
 \begin{algorithm}
 \caption{Main Entrance}\label{algo:main}
 \begin{algorithmic}[1]
 %\State $S\gets\emptyset$
-\State $N_k\gets|\mathit{sender}|\times k$
+\State $N_k\gets\Call{min}{|\mathit{sender}|\times k, |R|}$
 \While{$|R|>0$}
 \State $r \gets$ \Call{dequeue}{R}
 \State $N_r\gets N_r+1$
@@ -51,12 +52,12 @@ let $\mathit{sender}$ be a set of lists $\{S_i, S_j, …\}$ that is the sends di
 \EndIf
 %\State $S_i\gets S_i\cup\{s\}$ 
 \State $\mathit{cur}\gets \mathit{cur}\cup \{r,s\}$
-\If{$N_r=N_k \wedge |R|=0$}
+\If{$N_r=N_k$}
 \State $\mathit{sections}\gets\mathit{sections}\cup\{\mathit{cur}\}$
 \State $\mathit{cur}\gets\emptyset$
 %\State $\forall S \in\{S_1,S_2,\ldots\}S\gets\emptyset$
 \State $N_r\gets 0$
-\State $N_k\gets|\mathit{sender}|\times k$
+\State $N_k\gets\Call{min}{|\mathit{sender}|\times k, |R|}$
 \EndIf
 \EndWhile
 \end{algorithmic}
@@ -146,7 +147,20 @@ N_k^\prime = N_k-1
 
 \end{comment}
 
-At a low level, the presentation needs to first explain a few data structures that are essential to the algorithm.
+At a low level, the presentation needs to first explain a few data structures and functions that are essential to the algorithm.
+$R$ is a list of all the sequential receives in a process.
+$\mathit{sender}$ is a set of lists $\{S_i, S_j, \ldots\}$ that is the sends directed to the process grouped by the sending process.
+$N_k$ is the number of receives in a single section.
+$N_r$ is a number to count the receives added to the section and is initialized to $0$.
+The set $\mathit{cur}$ is used to store the sends and receives in the current section. It is initialized to an empty set.
+The set $\mathit{sections}$ is used to store all the sections.
+
+Besides the data structures, the algorithm also applies two auxiliary functions. 
+$\Call{dequeue}{L}$ removes and returns the first element in the list $L$.
+$\Call{frm}{r}$ returns the sender ID of the receive $r$.
+
+
+
 $\mathit{P}$ is a set of all the processes in a CTP. 
 $frm_t$ is a set of the unique identifiers of all the senders for the receiver $p_t$. 
 The identifier of a sender can be removed from $frm_t$ once the sender has no send to be distributed to $p_t$.
