@@ -36,7 +36,7 @@ let $\mathit{sender}$ be a set of lists $\{S_i, S_j, …\}$ that is the sends di
 \caption{Main Entrance}\label{algo:main}
 \begin{algorithmic}[1]
 %\State $S\gets\emptyset$
-\State $N_K\gets|\mathit{sender}|\times K$
+\State $N_k\gets|\mathit{sender}|\times k$
 \While{$|R|>0$}
 \State $r \gets$ \Call{dequeue}{R}
 \State $N_r\gets N_r+1$
@@ -51,12 +51,12 @@ let $\mathit{sender}$ be a set of lists $\{S_i, S_j, …\}$ that is the sends di
 \EndIf
 %\State $S_i\gets S_i\cup\{s\}$ 
 \State $\mathit{cur}\gets \mathit{cur}\cup \{r,s\}$
-\If{$N_r=N_K \wedge |R|=0$}
+\If{$N_r=N_k \wedge |R|=0$}
 \State $\mathit{sections}\gets\mathit{sections}\cup\{\mathit{cur}\}$
 \State $\mathit{cur}\gets\emptyset$
 %\State $\forall S \in\{S_1,S_2,\ldots\}S\gets\emptyset$
 \State $N_r\gets 0$
-\State $N_K\gets|\mathit{sender}|\times K$
+\State $N_k\gets|\mathit{sender}|\times k$
 \EndIf
 \EndWhile
 \end{algorithmic}
