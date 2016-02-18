@@ -99,7 +99,7 @@ The column ``Speed" reports the relative speedup over the running time of simply
 \scriptsize
 \caption{Tests on Selected Benchmarks}\label{table:benchmarks}
      \begin{threeparttable}
-    % \def\arraystretch{1.5}
+     %\def\arraystretch{1.2}
 \begin{tabular}{c|p{1.7cm}|c|c|c|c|c|c|}
 		\cline{2-8}	  
 & \multicolumn{3}{c|}{Test Programs} & \multicolumn{4}{c|}{Performance}   \\ \cline{2-8}   
@@ -166,7 +166,8 @@ To evaluate how the input $k$ impacts the generated match pairs, the presentatio
 \examplefigtemplate
 
 \begin{figure}[!h]
-\begin{minipage}{.5\textwidth}
+%\begin{minipage}{.5\textwidth}
+\centering
 \begin{tikzpicture}[scale=0.7]
 \begin{axis}[
     xlabel={$k$},
@@ -233,14 +234,15 @@ To evaluate how the input $k$ impacts the generated match pairs, the presentatio
 \end{axis}
  
 \end{tikzpicture}
-\end{minipage}
+%\end{minipage}
 
 \caption{The number of divided sections of varying the input $k$.}
 \label{fig:relation:section}
 \end{figure}
 
 \begin{figure}[!h]
-\begin{minipage}{.55\textwidth}
+\centering
+%\begin{minipage}{.55\textwidth}
 \begin{tikzpicture}[scale=0.7]
 \begin{axis}[
    title = {(a)},
@@ -278,9 +280,9 @@ To evaluate how the input $k$ impacts the generated match pairs, the presentatio
     \legend{\textit{WorstT1},\textit{Pktuse}}
 \end{axis}
 \end{tikzpicture}
-\end{minipage}
+%\end{minipage}
 
-\begin{minipage}{.55\textwidth}
+%\begin{minipage}{.55\textwidth}
 \begin{tikzpicture}[scale=0.7]
 \begin{axis}[
    title = {(b)},
@@ -331,7 +333,7 @@ To evaluate how the input $k$ impacts the generated match pairs, the presentatio
     \legend{\textit{WorstT2},\textit{Diffu2DNoBa},\textit{Floyd}}
 \end{axis}
 \end{tikzpicture}
-\end{minipage}
+%\end{minipage}
 
 \caption{The relative growth of the number of match pairs of varying the input $k$, where $\mathrm{Match}_1$ is the number of the generated match pairs for $k=1$.}
 \label{fig:relation:match}
