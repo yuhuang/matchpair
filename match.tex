@@ -1,16 +1,17 @@
 \subsection{Match Pair Approximation}
 
-$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} directly applies the over-approximation algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} to generate the match pairs for the sends and receives in a specific section.
-Intuitively, the algorithm checks all the pairs of receives and sends in the section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
-A rank of a receive is its position in the receive list for the section. 
-A rank of a send is its position in the send list from a particular sender to the section.    
+Given the set $\mathit{sections}$ that is output by \algoref{algo:main}, the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is able to generate the match pairs for each section independently. 
+
+Intuitively, the algorithm checks all the pairs of receives and sends in each section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
+A rank of a receive is its position in the list $R$. 
+A rank of a send is its position in the send list $S$ from a particular sender to the receiver.    
 Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13} for more detail of the algorithm. 
 
 
-$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} implies the ``match over-approximation" property in the prior work \cite{DBLP:conf/kbse/HuangMM13}. The paper presents this property in \lemmaref{lemma:match}. 
+The existing algorithm implies the ``match over-approximation" property. This paper presents this property in \lemmaref{lemma:match}. 
 
 \begin{lemma}
-$\mathrm{MATCHAPPROX}$ in \algoref{algo:main} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are added to the output $M$.
+The existing algorithm \cite{DBLP:conf/kbse/HuangMM13} over-approximates the match pairs for all the receives and sends in a specific section; that is saying, that all the precise match pairs (and maybe some unprecise match pairs) in the section are generated.
 \label{lemma:match}
 \end{lemma}
 

@@ -6,8 +6,8 @@
 %send list $S(p_{src}, p_{dest})$
 
 %This section describes the general structure of the approach in this paper.
-\algoref{algo:main} presents how to generate match pairs for each process in a CTP. 
-Intuitively, the algorithm sections each process, where each section contains a number of sequential receives. For each section, the algorithm distributes the same number of sends from multiple sender processes to match the receives in each section. Finally, the divided sections consisting of only sends and receives are input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
+This section presents how to generate match pairs for each process in a CTP. 
+Intuitively, the algorithm in \algoref{algo:main} sections each process, where each section contains a number of sequential receives. For each section, the algorithm distributes the same number of sends from multiple sender processes to match the receives in each section. Finally, the divided sections consisting of only sends and receives are input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
 
 %a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
@@ -99,7 +99,7 @@ while | R | \neq 0 {
 \begin{comment}
 
 \begin{algorithm}
-\caption{Main Entrance}\label{algo:main}
+\caption{Process Sectioning}\label{algo:main}
 \begin{algorithmic}[1]
 \For{$p_t\in \mathit{P}$}
 \State let $R_t$ be the sequence of receives in $p_t$
@@ -147,7 +147,10 @@ N_k^\prime = N_k-1
 
 \end{comment}
 
-At a low level, the presentation needs to first explain a few data structures and functions that are essential to the algorithm.
+
+\subsection{Process Sectioning}
+
+At a low level, the presentation needs to first explain a few data structures that are essential to the algorithm in \algoref{algo:main}.
 $R$ is a list of all the sequential receives in a process.
 $\mathit{sender}$ is a set of lists $\{S_i, S_j, \ldots\}$ that is the sends directed to the process grouped by the sending process.
 $N_k$ is the number of receives in a single section.
@@ -155,12 +158,34 @@ $N_r$ is a number to count the receives added to the section and is initialized 
 The set $\mathit{cur}$ is used to store the sends and receives in the current section. It is initialized to an empty set.
 The set $\mathit{sections}$ is used to store all the sections.
 
-Besides the data structures, the algorithm also applies two auxiliary functions. 
+Besides the data structures, the algorithm also applies a few auxiliary functions. 
+$\Call{min}{a,b}$ returns one of the parameters that has a smaller value. 
 $\Call{dequeue}{L}$ removes and returns the first element in the list $L$.
 $\Call{frm}{r}$ returns the sender ID of the receive $r$.
 
+Given the data structures and functions, \algoref{algo:main} works in several steps: 
+\begin{compactenum}
+\item Dequeuing the first receive $r$ from the list $R$ (line 3 to line 4);
+\item Choosing a sender $S$ based on the sender ID of $r$ (line 5 to line 9);
+\item Dequeuing the first send $s$ from the sender $S$ (line 10);
+\item Removing the sender $S$ from $\mathit{sender}$ if there are no sends remained in $S$ (line 11 to line 13);
+\item Adding the combination of $r$ and $s$ to the current section $\mathit{cur}$ (line 14);
+\item Adding the current section $\mathit{cur}$ to the set $\mathit{sections}$ once $N_r$ is equal to $N_k$ (line 15 to line 20);
+\item Repeating the above steps until $R$ is empty (line 2).
+\end{compactenum}
 
 
+$N_k$ is computed given two parameters: $|\mathit{sender}|\times\mathit{k}$ and $|R|$. The intuition is that the algorithm, if possible, distributes roughly average $k$ sends from each sender and therefore, adds $\mathit{sender}|\times\mathit{k}$ receives to a section. If there are not sufficient receives in $R$, then the algorithm adds all that remained in $R$ to the section, where the number is $|R|$. 
+
+For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, then the algorithm randomly chooses a sender $S$ that has the minimum count among all the senders at line 6. If $r$ is a deterministic receive, then $S$ is the specific sender for $r$ at line 8.
+
+Given the steps above, the algorithm is able to section the process. If any section is matched at line 15, the variables $\mathit{cur}$, $N_r$ and $N_k$ need to be reset at line 17 to line 19. 
+
+%Finally, the set $\mathit{sections}$ is input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}, where the match pairs are generated independently for each section. 
+
+ 
+
+\begin{comment}
 $\mathit{P}$ is a set of all the processes in a CTP. 
 $frm_t$ is a set of the unique identifiers of all the senders for the receiver $p_t$. 
 The identifier of a sender can be removed from $frm_t$ once the sender has no send to be distributed to $p_t$.
@@ -191,6 +216,8 @@ The function $\mathrm{MIN}$ returns the minimum among two numbers: $|frm_t|\time
 The first number indicates that the algorithm, if possible, distributes roughly average $k$  sends from each sender and therefore, adds $|frm_t|\times\mathit{k}$ receives to a section. If there are not sufficient receives in $R_t$, then the algorithm adds all that remained in $R_t$ to the section, where the number is $\mathit{NR}_{t}$.
 
 
+
+
 \begin{lemma}
 \label{lemma:section}
 Each receive in a CTP is added to exactly one section by \algoref{algo:main}; each send in the CTP is also added to exactly one section if $\mathrm{DISTRIBUTESENDS}$ distributes the same number of sends to match the receives in any section.
@@ -204,5 +231,7 @@ Therefore, all the receives and sends in the CTP are partitioned into sections.
 $\Box$
 \end{proof}
 \lemmaref{lemma:section} is used to prove the key theorem later in the paper.
+
+\end{comment}
 
 
