@@ -6,9 +6,10 @@
 %send list $S(p_{src}, p_{dest})$
 
 %This section describes the general structure of the approach in this paper.
-This section presents how to generate the match pairs for a CTP. For each process in the CTP that contains a sequence of receives, \algoref{algo:main} is called once. 
-Intuitively, \algoref{algo:main} sections each process, where each section contains roughly $k$ sends from each sender. A sequence of receives in the process is also added to the section where the number of receives is equal to the number of sends in the same section.
-The divided sections consisting of only sends and receives are then input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
+This section presents how to generate match pairs for a CTP. 
+Intuitively, \algoref{algo:main} is called several times for the CTP, once for each process that contains a sequence of receives. 
+The process is sectioned, where each section contains roughly $k$ sends from each sender. A sequence of receives in the process is also added to the section where the number of receives is equal to the number of sends in the same section.
+The divided sections consisting of only sends and receives for the process are then input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
 
 %a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
