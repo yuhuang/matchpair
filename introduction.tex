@@ -10,7 +10,7 @@ Prior work on program correctness in the message passing paradigm can be roughly
 The most efficient types of encoding for symbolic model checking of message passing programs, where efficient means they scale to programs with a high degree of message non-determinism, rely on the concept of a \emph{match pair} and a \emph{concurrent trace program} abstraction (CTP) \cite{DBLP:conf/kbse/HuangMM13,HuangNFM15,DBLP:conf/fm/ForejtKNS14,DBLP:conf/atva/ElwakilYW10,DBLP:conf/issta/ElwakilY10}. 
 A match pair is a send and receive pair that may be matched by the run-time in some feasible execution of the program \cite{DBLP:conf/kbse/HuangMM13,HuangNFM15,DBLP:conf/fm/ForejtKNS14,DBLP:conf/atva/ElwakilYW10,DBLP:conf/issta/ElwakilY10}. 
 A CTP is an abstraction of the program that removes all branching so each process is a sequence of send, receive, and wait (e.g., a witness to the completion of a send or receive) operations \cite{DBLP:conf/kbse/HuangMM13,HuangNFM15}. 
-The abstraction is constructed by observing the execution of the program in the run time for a given input. Symbolic model checking gives the SMT solver an encoded CTP with a set of match-pairs, and the solver then tries to select a subset of the given  match-pairs in such a way that the CTP deadlocks or violates an assertion. 
+The abstraction is constructed by observing the execution of the program in the run time for a given input. Symbolic model checking gives the SMT solver an encoded CTP with a set of match pairs, and the solver then tries to select a subset of the given match pairs in such a way that the CTP deadlocks or violates an assertion. 
 
 %The symbolic model checking requires a over-approximated set of match pairs as input. The set includes all the true match pairs and maybe a few match pairs that may never occur in the runtime. 
 %The work then encodes the CTP into an SMT problem that uses a set of formulas to constrain the program behavior based on the semantics. The typical error such as deadlock, zero buffer incompatibility or assertion violation is then checked by solving the SMT problem. If a satisfying assignment exists for the SMT problem, then the error is detected where the match pairs are resolved to capture the message communication in a feasible program execution. If the SMT problem is unsatisfiable, the CTP is free of that error because no feasible schedule exists with any resolution of the match pairs. 
@@ -36,7 +36,7 @@ The total number of the sends distributed to the section is equal to the number 
 Match pairs are then generated for each section independently. This independent sectioning effectively ignores combinations of match pairs, that are feasible, but only available when the considered concurrent outstanding sends are more than the number of receives in the section. 
 The algorithm generates the match pairs for the sends and receives in each section by a list of simple rules based on ranks \cite{DBLP:conf/kbse/HuangMM13}. A rank is a non-negative integer that represents the position of a send or a receive in a specific sequence in the section.
 
-As for a verification process, the approach in this paper starts with $k=1$ and increments $k$ to a larger bound that is able to change the number of the divided sections, because the new set of match pairs is only meaningful if each process is sectioned differently. The program property is then witnessed with the larger bound $k$; or the process repeats.
+As for a verification process, the approach in this paper starts with $k=1$ and increments $k$ to a larger bound that is able to change the number of the divided sections, as the new set of match pairs is only meaningful if each process is sectioned differently. The growth of the match pair set is polynomial as $k$ increases. The program property is then witnessed with the larger bound $k$; or the process repeats.
 
 
 %Have you added the discussion that k jumps by increments greater than 1? Meaning that you move k until the number of sections changes? In many regards, that is what is critical; start with k=1, then move k until the # of sections changes, run the solver, repeat. Is that discussion in the paper?
@@ -48,17 +48,17 @@ As for a verification process, the approach in this paper starts with $k=1$ and 
 %Due to the missed match pairs that are derived from matching sends and receives in different sections, the SMT problem may not encode the complete program behavior. However, if the problem is satisfiable, then it is known that a specific error exists for a feasible schedule that is resolved by the encoding. As such, the SMT encoding with a reduced set of match pairs can be used to detect errors. If the problem is, however, unsatisfiable for the under-approximated match pairs, it does not mean that there are provably no errors for any feasible execution in the runtime. It is then necessary to generate a larger set of match pairs by a new input K to capture more behavior for detection.
 
 
-The paper includes the proof that the precise match pairs for any CTP can be generated with an appropriate bound $k$. 
+The paper includes the discussion that the precise match pairs for any CTP can be generated with a sufficiently large bound $k$. 
 Experiments further show that the runtime cost of error detection is dramatically reduced as the errors are found with relatively small values of $k$ creating simple problem instances for the SMT solver. 
 Experiments also show that the algorithm is able to scale to a program that employs a high degree of message non-determinism and/or a high degree of deep communication.
-Deep communication in this context means that a process may receive many messages from each sender.
+Deep communication in this context means that each sender for a receiver issues a long sequence of sends to the receiver.
 The contributions include,
 \begin{compactitem}
 \item the efficient algorithm that under-approximates the precise match pairs for a CTP, 
 %where the size depends on a positive integer $k$ configured by the user,
-\item the proof that the precise match pairs for any CTP can be generated by the new algorithm with an appropriate bound $k$, and
+\item the proof that the precise match pairs for any CTP can be generated by the new algorithm with a sufficiently large bound $k$, and
 \item the results from the experiments using a set of benchmarks to demonstrate the improved ability of witnessing program properties.
 \end{compactitem}
 
 The rest of the paper is organized as follows: 
-Sections 2 presents the definition and semantics of CTP; Section 3 presents the general algorithm in the paper; Section 4 gives the proof that the precise match pairs can be generated; Section 5 gives the experimental results; Section 6 discusses the related work; and Section 7 is the conclusion and future work.
+Sections 2 presents the definition and semantics of CTP; Section 3 presents the general algorithm in the paper; Section 4 states that the precise match pairs can be generated; Section 5 gives the experimental results; Section 6 discusses the related work; and Section 7 is the conclusion and future work.
