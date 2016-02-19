@@ -109,7 +109,7 @@ $R$ is a list of all the sequential receives in a process.
 $\Delta$ is a set of IDs of all the senders $\{p_1, p_2, \ldots\}$.
 %$N_k$ is the number of receives in a single section.
 %$N_r$ is a number to count the receives added to the section and is initialized to $0$.
-$\mathit{cur}$ is a set of sends and receives for the current section. It is initialized to an empty set.
+The current section $\mathit{cur}$ represents a new program that contains only sends and receives. It is initialized to an empty set.
 The set $\mathit{secs}$ is used to store all the partitioned sections.
 
 The algorithm also applies a few auxiliary functions. 
@@ -125,7 +125,7 @@ Given the data structures and functions, \algoref{algo:main} runs in several ste
 \item Incrementing the count $N_s(p)$ and dequeuing the first send $s$ from the send list of $p$ (line 8 to line 9);
 %\item Removing the sender $S$ from $\mathit{sender}$ if there are no sends remained in $S$ (line 11 to line 13);
 \item Adding the combination of $r$ and $s$ to the current section $\mathit{cur}$ (line 10);
-\item Adding the current section $\mathit{cur}$ to the set $\mathit{secs}$ once $N_s(p)$ is greater or equal to $k$ for each sender $p\in\Delta$ or there are no sends in $S(p)$ or there are no receives in the destination process (line 11 to line 17);
+\item Adding the current section $\mathit{cur}$ to the set $\mathit{secs}$ and then resetting $\mathit{cur}$ and $N_s$ once $N_s(p)$ is greater or equal to $k$ for each sender $p\in\Delta$ or there are no sends in $S(p)$ or there are no receives in the destination process (line 11 to line 17);
 \item Repeating the above steps until $R$ is empty (line 1).
 \end{compactenum}
 
@@ -136,7 +136,7 @@ For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, the
 
 The intuition of the condition at line 11 is that each sender must distribute roughly $k$ sends to the current section unless the receive list $R$ is already empty. The sender may distribute more than $k$ sends as if more than $k$ deterministic receives that specify the sender are added to the section. If the total number of sends in the sender is less than $k$, then all the sends must be distributed from that sender.  
 
-If a section is matched at line 11, the variables $\mathit{cur}$ and $N_s$ need to be reset at line 13 to line 16. 
+%If a section is matched at line 11, the variables $\mathit{cur}$ and $N_s$ need to be reset at line 13 to line 16. 
 
 %Finally, the set $\mathit{sections}$ is input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}, where the match pairs are generated independently for each section. 
 
@@ -186,8 +186,6 @@ $\mathrm{SECTIONMATCH}$ is a simple equation in (3).
 \end{equation}
 The function $\mathrm{MIN}$ returns the minimum among two numbers: $|frm_t|\times\mathit{k}$ and $\mathit{NR}_{t}$.
 The first number indicates that the algorithm, if possible, distributes roughly average $k$  sends from each sender and therefore, adds $|frm_t|\times\mathit{k}$ receives to a section. If there are not sufficient receives in $R_t$, then the algorithm adds all that remained in $R_t$ to the section, where the number is $\mathit{NR}_{t}$.
-
-
 
 
 \begin{lemma}
