@@ -21,16 +21,10 @@ to group all the sends to a single section, where the function $\mathrm{MAX}$ re
 k\ge \Call{max}{\{k_j \mid p_j\in P\}},
 \end{equation} 
 where $P$ is a set of all the processes in the CTP and $k_j$ is a bound that satisfies equation (3) for process $p_j$, then each process in the CTP is divided into a single section. The bound $k$ that satisfies equation (4) is the \textit{max bound}. 
- 
-\begin{theorem}
-The complete set of the precise match pairs for a CTP can be over-approximated by the algorithm in this paper given the \textit{max bound} of $k$.
-\label{theorem:precise}
-\end{theorem}
-\begin{proof}
-The proof is trivial. Given the \textit{max bound} of $k$, the program has only one section for each process. Also, the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is able to over approximate the precise match pairs for each section according to \lemmaref{lemma:match}. Therefore, all the precise match pairs for the CTP can be generated.
-$\Box$
+
+According to the \textit{max bound} of $k$ and the match over-approximation property of the existing algorithm \cite{DBLP:conf/kbse/HuangMM13}, the precise match pairs for a CTP can be over-approximated by the algorithm in this paper.
+
 
 %Since all the sends and receives are added to the sections by \algoref{algo:main} (\lemmaref{lemma:section}), the number of sends is equal to the number of receives for any section (\lemmaref{lemma:distribute}), and \textrm{MATCHAPPROX} is able to over-approximate the precise match pairs for any section (\lemmaref{lemma:match}), the only way to approximate all the precise match pairs for a CTP is to add all the receives in each process to a single section. Therefore, the proof must claim that there is exactly one section for each process, assuming $k \geq$ $\mathrm{MAX}$ $(\ceil*{\frac{\mathit{NR_{1}}}{|frm_1|}},\ldots,\ceil*{\frac{\mathit{NR_{|P|}}}{|frm_{|P|}|}})$. Applying a feasible assignment of $k$ to equation (3), it is trivial to prove that $N_k = \mathit{NR_{t}}$ for each process $p_t$. As such, all the precise match pairs for the CTP can be over-approximated.
 
-\end{proof}
 
