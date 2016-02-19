@@ -1,10 +1,10 @@
 \subsection{Match Pair Approximation}
 
-Given the set $\mathit{sections}$ that is output by \algoref{algo:main}, the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is able to generate the match pairs for each section independently. 
+Given the set $\mathit{secs}$ that is output by \algoref{algo:main}, the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is able to generate the match pairs for each section independently. 
 
 Intuitively, the algorithm checks all the pairs of receives and sends in each section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
 A rank of a receive is its position in the list $R$. 
-A rank of a send is its position in the send list $S$ from a particular sender to the receiver.    
+A rank of a send is its position in the send list $S(p)$ from the sender $p$ to the receiver.    
 Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13} for more detail of the algorithm. 
 
 
