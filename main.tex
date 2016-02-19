@@ -8,35 +8,14 @@
 %This section describes the general structure of the approach in this paper.
 This section presents how to generate match pairs for a CTP. 
 Intuitively, \algoref{algo:main} is called several times for the CTP, once for each process that contains a sequence of receives. 
-The process is sectioned, where each section contains roughly $k$ sends from each sender. A sequence of receives in the process is also added to the section where the number of receives is equal to the number of sends in the same section.
+In each call of \algoref{algo:main}, a process is sectioned, where each section contains roughly $k$ sends from each sender. A sequence of receives in the process is also added to the section where the number of receives is equal to the number of sends in the same section.
 The divided sections consisting of only sends and receives for the process are then input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
 
 %a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
-\begin{comment}
-Sections = {}
-cur = {}
-
-while | R | \neq 0 {
-  r = dequeue(R);
-  S = ()
-  if from(r) = * 
-     Let S be such that \forall S' \in {S_i, S_j, ...} (count(S) \lte count(S’)) and | S | \neq 0)
-	  count(S) += 1
-  else
-     Let S be such that S = Sender(r)
-
-  cur = cur \cup {r, dequeue(S)}
-  if \forall S \in {S_i, S_j, ...} (count(S) = k \vee |S| = 0 \vee | R | = 0)
-     Sections  = Sections \cup {cur}
-	  cur = {}
-	  \forall S \in {S_i, S_j, ...} count(S) = 0;
-}
-\end{comment}
-
 
 \begin{algorithm}
-\caption{Main Entrance}\label{algo:main}
+\caption{Process Sectioning}\label{algo:main}
 \begin{algorithmic}[1]
 %\State $S\gets\emptyset$
 %\State $N_k\gets\Call{min}{|\mathit{sender}|\times k, |R|}$
@@ -125,21 +104,21 @@ N_k^\prime = N_k-1
 
 \subsection{Process Sectioning}
 
-At a low level, the presentation needs to first explain a few data structures that are essential to the algorithm in \algoref{algo:main}.
+At a low level, the presentation needs to first explain a few data structures that are essential to \algoref{algo:main}.
 $R$ is a list of all the sequential receives in a process.
 $\Delta$ is a set of IDs of all the senders $\{p_1, p_2, \ldots\}$.
 %$N_k$ is the number of receives in a single section.
 %$N_r$ is a number to count the receives added to the section and is initialized to $0$.
 $\mathit{cur}$ is a set of sends and receives for the current section. It is initialized to an empty set.
-The set $\mathit{secs}$ is used to store all the sections.
+The set $\mathit{secs}$ is used to store all the partitioned sections.
 
-Besides the data structures, the algorithm also applies a few auxiliary functions. 
+The algorithm also applies a few auxiliary functions. 
 $\Call{S}{p}$ returns a list of sends for the sender $p$.
 $\Call{$N_S$}{p}$ returns the count of sends directed to the current section by the sender $p$.
 $\Call{dequeue}{L}$ removes and returns the first element in the list $L$.
 $\Call{frm}{r}$ returns the sender ID of the receive $r$.
 
-Given the data structures and functions, \algoref{algo:main} works in several steps: 
+Given the data structures and functions, \algoref{algo:main} runs in several steps: 
 \begin{compactenum}
 \item Dequeuing the first receive $r$ from the list $R$ (line 2);
 \item Choosing a sender $p$ based on the sender ID of $r$ (line 3 to line 7);
@@ -153,18 +132,18 @@ Given the data structures and functions, \algoref{algo:main} works in several st
 
 %$N_k$ is computed given two parameters: $|\mathit{sender}|\times\mathit{k}$ and $|R|$. The intuition is that the algorithm, if possible, distributes roughly average $k$ sends from each sender and therefore, adds $\mathit{sender}|\times\mathit{k}$ receives to a section. If there are not sufficient receives in $R$, then the algorithm adds all that remained in $R$ to the section, where the number is $|R|$. 
 
-For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, then the algorithm randomly chooses a sender $p$ that has the minimum count among the senders that each has at least one send at line 4. If $r$ is a deterministic receive, then $p$ is the specific sender for $r$ at line 6.
+For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, then the algorithm randomly chooses a sender $p$ that has the minimum count among the senders where each sender has at least one send at line 4. If $r$ is a deterministic receive, then $p$ is the specific sender for $r$ at line 6.
 
-The intuition of the condition at line 11 is that any sender must distribute roughly $k$ sends to the current section unless the receive list $R$ is already empty. The sender may distribute more than $k$ sends as if more than $k$ deterministic receives that specify that sender are added to the section. If the total number of sends in the sender is less than $k$, then all the sends must be distributed from that sender.  
+The intuition of the condition at line 11 is that each sender must distribute roughly $k$ sends to the current section unless the receive list $R$ is already empty. The sender may distribute more than $k$ sends as if more than $k$ deterministic receives that specify the sender are added to the section. If the total number of sends in the sender is less than $k$, then all the sends must be distributed from that sender.  
 
-If any section is matched at line 11, the variables $\mathit{cur}$ and $N_s$ need to be reset at line 13 to line 16. 
+If a section is matched at line 11, the variables $\mathit{cur}$ and $N_s$ need to be reset at line 13 to line 16. 
 
 %Finally, the set $\mathit{sections}$ is input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}, where the match pairs are generated independently for each section. 
 
  
  \subsection{Match Pair Approximation}
 
-Given the set $\mathit{secs}$ that is output by \algoref{algo:main}, the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13} is able to generate the match pairs for each section independently. 
+Given the partitioned sections in the set $\mathit{secs}$ by \algoref{algo:main}, the match pairs for each section can be generated independently by the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13}. 
 
 Intuitively, the algorithm checks all the pairs of receives and sends in each section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
 A rank of a receive is its position in the list $R$. 

@@ -1,26 +1,26 @@
 \section{Coverage of Message Communication}
 
-As discussed earlier, a send and a receive from two different sections are not considered for matching. For the CTP in \figref{fig:example}, the match pair $\langle r_1\ s_1\rangle$ can not be generated with $k=1$ as the receive $r_1$ and the send $s_1$ are partitioned into two sections. 
-To capture the missed match pairs for a send and a receive, a possible way is to group them into a single section with a larger bound $k$. The example in \figref{fig:example} also indicates that the match pair $\langle r_1\ s_1\rangle$ can be generated with $k\geq2$.  
-Note that all the precise match pairs for the CTP in \figref{fig:example} are generated with $k=3$.
-Further, \defref{def:maxbound} states that all the receives in any process and all the sends directed to that process can be grouped into a single section.
+According to \algoref{algo:main}, a send and a receive from two different sections are not considered for matching. For the CTP in \figref{fig:example}, the match pair $\langle r_1\ s_1\rangle$ can not be generated with $k=1$ as the receive $r_1$ and the send $s_1$ are partitioned into two sections. 
+To capture the missed match pairs for a send and a receive, a possible way is to group them into a single section with a larger bound $k$.  The match pair $\langle r_1\ s_1\rangle$ for the example in \figref{fig:example} can be generated with $k\geq2$.  
+Note that all the precise match pairs for the CTP in \figref{fig:example} are generated with $k=3$, where each process is partitioned into a single section.
+%\defref{def:maxbound} further states that the receives in each process and all the sends directed to that process can be grouped into a single section.
  
 \begin{definition}[\textit{Max Bound}]
 \label{def:maxbound}
-For any CTP, there exists a bound $k$, such that each process can be divided into a single section; this bound $k$ is called the \textit{max bound}. 
+For any CTP, there exists a bound $k$, such that each process can be partitioned into a single section; this bound $k$ is called the \textit{max bound}. 
 \end{definition} 
 
 The \textit{max bound} of $k$ can be statically computed. 
 %Assuming $R_i$ is the receive list for process $p_i$, and $\textit{sender}_i$ is a set of send lists from all the potential senders to process $p_i$. 
 According to \algoref{algo:main}, a section can be constructed only if each sender reaches the $k$-bound for send distribution or distributes all the sends assuming the receive list is not empty. As such, it implies that 
 \begin{equation}
-k= \Call{max}{\{N_s(p_i)\mid p_i \in \mathit{sender}\}},
+k= \Call{max}{\{|S(p_i)|\mid p_i \in \mathit{sender}\}},
 \end{equation}
-to group all the sends to a single section in the destination process, where the function $\mathrm{MAX}$ returns the maximum among a set of numbers. It is assumed that the total number of receives in a process is equal to the total number of sends directed to the process. Therefore, the process is divided into a single section. Further, if the bound $k$ satisfies that  
+that is able to group all the sends to a single section in the destination process, where the function $\mathrm{MAX}$ returns the maximum among a set of numbers. It is assumed that the total number of receives in a process is equal to the total number of sends directed to the process. Therefore, the process is partitioned into a single section. Further, if the bound $k$ satisfies that  
 \begin{equation}
 k= \Call{max}{\{k_j \mid p_j\in P\}},
 \end{equation} 
-where $P$ is a set of all the processes in the CTP and $k_j$ is a bound that satisfies equation (5) for process $p_j$, then each process in the CTP is divided into a single section. The bound $k$ that satisfies equation (6) is the \textit{max bound}. 
+where $P$ is a set of all the processes in the CTP and $k_j$ is a bound that satisfies equation (5) for process $p_j$, then each process in the CTP is partitioned into a single section. The bound $k$ that satisfies equation (6) is the \textit{max bound}. 
 
 According to the \textit{max bound} of $k$ and the match over-approximation property of the existing algorithm \cite{DBLP:conf/kbse/HuangMM13}, the precise match pairs for a CTP can be over-approximated by the algorithm in this paper.
 
