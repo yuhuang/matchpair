@@ -248,7 +248,7 @@ title={(b)},
  
 \end{tikzpicture}
 %\end{minipage}
-\caption{The number of divided sections of varying the input $k$.}
+\caption{The number of partitioned sections of varying the input $k$.}
 \label{fig:relation:section}
 \end{figure}
 
@@ -350,27 +350,27 @@ title={(b)},
 \label{fig:relation:match}
 \end{figure}
 
-The first benchmark, \textit{WorstT1}, is constructed by restricting all the receives in \figref{fig:Texample} to be wildcard, which implies the worst case of message non-determinism. Also, let $m=4$ and $|S| = 25$ in the program configuration so there are more than one sections divided for a set of possible $k$-bound. In contrast, the best case of message non-determinism is a program that only contains deterministic receives. As such, the matches for the best case are deterministic.
+The first benchmark, \textit{WorstT1}, is constructed by restricting all the receives in \figref{fig:Texample} to be wildcard, which implies the worst case of message non-determinism. Also, let $m=4$ and $|S| = 25$ in the program configuration so there are more than one sections partitioned for a set of possible $k$-bounds. In contrast, the best case of message non-determinism is a program that only contains deterministic receives. As such, the matches for the best case program are deterministic.
 %In contrast, the second benchmark \textit{BestT1} is the best case of message non-determinism, where the program text is similar to \textit{WorstT1} only the receives are deterministic. 
 
-The second benchmark, \textit{WorstT2}, is related to the worst case of wide communication. Wide communication in this context means that the sender only sends one message to the receiver. The program is constructed by setting $|S|=1$ and $m=100$. As for the best case of wide communication, the program has to contain only the deep communication where a receiver has exactly one sender. The presentation does not discuss this case as the matches are deterministic such that the messages are received in a fixed FIFO order. 
+The second benchmark, \textit{WorstT2}, is related to the worst case of wide communication. Wide communication in this context means that the sender only sends one message to the receiver. The program is constructed by setting $|S|=1$ and $m=100$. As for the best case of wide communication, the program has to contain only the deep communication where a receiver has exactly one sender. The matches for this type of best case are deterministic because the messages are received in a fixed FIFO order. 
 
-Given the two worst-case programs, the presentation discusses how the number of sections and the number of match pairs grow as $k$ increases for the two cases. 
+Given the two worst-case programs, the presentation discusses how the number of sections and the number of match pairs grow as $k$ increases for the two programs. 
 The relationship between the number of sections and $k$ is illustrated in \figref{fig:relation:section}, and the relationship between the number of match pairs and $k$ is illustrated in \figref{fig:relation:match}.
 Note that the values of y-axis in \figref{fig:relation:match} are computed by dividing the number of match pairs for any $k$ by the number of match pairs for $k=1$.
 
 \figref{fig:relation:section} (a) shows that the growth of the number of sections is not linear for the program \textit{WorstT1}. As such, incrementing $k$ may not be meaningful if the number of sections does not change. The approach in this paper only increments $k$ until the number of sections changes, and then outputs the generated match pairs with $k$ to the SMT encoding.
-Since the number of the generated match pairs per section is also non-linear according to the complexity of the existing algorithm \cite{DBLP:conf/kbse/HuangMM13}, the total number of the match pairs for \textit{WorstT1} in \figref{fig:relation:match} (a) has a sharp growth between small values of $k$, and then grows more gently until it reaches the limit, which represents the over-approximated match pairs. This observation demonstrates that the algorithm scales for a small range of $k$ where the generated match set is small.
+Since the number of the generated match pairs per section is also non-linear according to the complexity of the existing algorithm \cite{DBLP:conf/kbse/HuangMM13}, the total number of the match pairs for \textit{WorstT1} in \figref{fig:relation:match} (a) has a sharp growth between small values of $k$, and then grows more gently until it reaches the bound, which represents the over-approximated match pairs. This observation demonstrates that the algorithm scales for a small range of $k$ where the generated match set is small.
 
 %The program \textit{BestT1} has the same growth of the number of sections with that for \textit{WorstT1} (not shown in \figref{fig:relation} (a)) because the send distribution has no difference between the two programs. 
 %Since all the receives are deterministic in the program \textit{BestT1} indicating the matches are also deterministic, the number of the match pairs in \figref{fig:relation} (b) does not grow across $k$.
 
-For the program \textit{WorstT2}, \figref{fig:relation:section} (b) shows that the number of sections is always one as expected because only one section can be divided for wide communication. 
+For the program \textit{WorstT2}, \figref{fig:relation:section} (b) shows that the number of sections is always one as expected because only one section can be partitioned for wide communication. 
 As such, the total number of match pairs for \textit{WorstT2} in \figref{fig:relation:match} (b) does not change. 
 
 Based on the discussion of message non-determinism and wide communication, the synthetic programs discussed earlier can be grouped. The programs \textit{DeepComm} and \textit{MultiM} are close to the worst case of message non-determinism as only wildcard receives are employed in both programs. For the wide communication, no synthetic program is close to the worst case. Instead, all the programs show a certain degree of deep communication. 
 
-The real programs can also be classified for message non-determinism and wide communication. \figref{fig:relation:section} and \figref{fig:relation:match} further plot the relations for the real programs. 
+The real programs can also be classified for message non-determinism and wide communication. \figref{fig:relation:section} and \figref{fig:relation:match} further plot the growths for the real programs. 
 The programs \textit{Diff2DNoBa} and \textit{Floyd} uses more wide communication, therefore, their growths in \figref{fig:relation:match} rapidly reach the bound of match pairs. In contrast, the program \textit{Pktuse} employs a large degree of deep communication with many wildcard receives. As such, \textit{Pktuse} in \figref{fig:relation:match} (a) gradually grows to the bound as $k$ increases to $128$.
 Thefore, the presentation demonstrates that the algorithm is able to scale to a program with a high degree of message non-determinism and a high degree of deep communication.
 

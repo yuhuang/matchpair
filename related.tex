@@ -1,6 +1,6 @@
 \section{Related Works}
 There are several works related to match pairs.
-Sharma et al. proposed the first push button model checker for MCAPI -- MCC \cite{DBLP:conf/fmcad/SharmaGMH09}. It indirectly controls the MCAPI runtime to verify MCAPI programs under zero buffer semantics. An obvious drawback of the work is its inability to analyze infinite buffer semantics which is known as a common runtime environment in message passing. A key insight, though, is the direct use of match pairs -- couplings for potential sends and receives.
+Sharma et al. proposed the first push button model checker for MCAPI -- MCC \cite{DBLP:conf/fmcad/SharmaGMH09}. It indirectly controls the MCAPI runtime to verify MCAPI programs under zero buffer semantics. An obvious drawback of the work is its inability to analyze infinite buffer semantics which is known as a common runtime environment in message passing. A key insight, though, is the direct use of match pairs.
 
 A precise SMT encoding technique is proposed for detecting user-provided assertions for MCAPI programs \cite{DBLP:conf/kbse/HuangMM13}. The encoding is sound and complete and is easy to use to reason about infinite buffer semantics without requiring a precise match set. The work also provides an algorithm that runs in quadratic time complexity to generate a over-approximated match set based on the given execution trace. This approach is extended to checking zero buffer incompatibility for MPI semantics \cite{HuangNFM15}. 
 
@@ -24,7 +24,7 @@ MPI-Spin is integrated in the model checker SPIN \cite{DBLP:journals/tse/Holzman
 
 CIVL is a model checker which uses symbolic execution to verify a number of safety properties of various types of concurrent programs including message passing programs \cite{DBLP:conf/kbse/ZhengRLDS15,DBLP:conf/sc/SiegelZLZMEDR15}.
 
-Vo et al. used Lamport clocks to update the auxiliary information via piggyback messages \cite{DBLP:conf/sc/VoAGSSB10,DBLP:conf/IEEEpact/VoGKSSB11}. While completeness is abandoned in their analysis, they show the work is useful and efficient in practice. 
+Vo et al. proposed an approach that uses Lamport clocks to update the auxiliary information via piggyback messages \cite{DBLP:conf/sc/VoAGSSB10,DBLP:conf/IEEEpact/VoGKSSB11}. While completeness is abandoned in their analysis, the work is useful and efficient in practice. 
 
 
 %Elwakil et al. also used SMT techniques to reason about the program behavior in the MCAPI domain \cite{DBLP:conf/issta/ElwakilY10,DBLP:conf/atva/ElwakilYW10}. State-based and order-based encoding techniques are both used. These techniques fail to reason about the infinite buffer semantics and require a precise match set which is non-trivial to compute beforehand.
