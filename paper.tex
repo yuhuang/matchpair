@@ -3,7 +3,8 @@
 % for Lecture Notes in Computer Science,
 % version 2.4 for LaTeX2e as of 16. April 2010
 %
-\documentclass[conference]{llncs}
+\documentclass[10pt,peerreview]{IEEEtran}
+%\citestyle{acmauthoryear}
 %
 \usepackage{url}
 \usepackage{comment}
@@ -56,18 +57,43 @@
 \newcommand{\thmref}[1]{Theorem~\ref{#1}}
 \newcommand{\algoref}[1]{Algorithm~\ref{#1}}
 
-%\newtheorem{definition}{Definition}
-%\newtheorem{theorem}{Theorem}
-%\newtheorem{lemma}{Lemma}
-%\newtheorem{corollary}{Corollary}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+%\setcopyright{acmcopyright}
+
 
 %
 \begin{document}
 \title{An Efficient Approach for Match Pair Approximation in Message Passing}
 
-\author{Yu Huang \and Eric Mercer}
-\institute{Brigham Young University \\
-          \email{\{yuHuang,egm\}@byu.edu}}
+
+\begin{comment}
+ \author{Yu Huang}
+ \affiliation{
+  \institution{School of Economic Information Engineering, Southwestern University of Finance and Economics}
+  \streetaddress{No.555, Liutai Ave., Wenjiang District}
+  \city{Chengdu}
+  \state{Sichuan}
+  \postcode{611130}
+  \country{China}}
+ \email{yuhuang@swufe.edu.cn}
+\author{Eric Mercer}
+ \affiliation{
+  \institution{Computer Science Department, Brigham Young University}
+  \streetaddress{Brigham Young University}
+  \city{Provo}
+  \state{Utah}
+  \postcode{84602}
+  \country{USA}}
+\email{egm@byu.edu}
+\end{comment}
+
+\author{Yu Huang, Eric Mercer}
+
 
 \maketitle
 %
@@ -75,11 +101,17 @@
 \emergencystretch=1em
 
 
+
 \begin{abstract} 
 \input{abstract}
 \end{abstract}
 
-\keywords{Message Passing, MPI, SMT}
+   
+
+\begin{IEEEkeywords}
+Message Passing, MPI, SMT.
+\end{IEEEkeywords}
+
 
 \input{example-defs}
 \input{introduction}
@@ -94,6 +126,6 @@
 \input{related}
 \input{conclusion}
 
-\bibliographystyle{splncs03}
+\bibliographystyle{IEEEtran}
 \bibliography{bib/paper}
 \end{document}
