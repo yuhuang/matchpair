@@ -9,7 +9,7 @@
 This section presents how to generate match pairs for a CTP. 
 Intuitively, \algoref{algo:main} is called several times for the CTP, once for each process that contains a sequence of receives. 
 In each call of \algoref{algo:main}, a process is sectioned, where each section contains roughly $k$ sends from each sender. A sequence of receives in the process is also added to the section where the number of receives is equal to the number of sends in the same section.
-The divided sections consisting of only sends and receives for the process are then input to the existing algorithm for match pair generation \cite{DBLP:conf/kbse/HuangMM13}. 
+The divided sections consisting of only sends and receives for the process are then input to the existing algorithm for match pair generation. 
 
 %a fixed number of sequential receives. It then distributes a sequence of sends from each sender process to match the receives in each section. The total number of sends is equal to the number of receives in each section. Finally, the algorithm generates the match pairs for the sends and the receives in the same section by simply comparing their ranks. The intuitive meaning of a rank is a non-negative integer that represents the position of a send or a receive in a specific sequence.
 
@@ -19,11 +19,13 @@ The divided sections consisting of only sends and receives for the process are t
 \begin{algorithmic}[1]
 %\State $S\gets\emptyset$
 %\State $N_k\gets\Call{min}{|\mathit{sender}|\times k, |R|}$
+\State $\mathit{cur}\gets\emptyset$
+\State $\forall p \in \Delta. N_s(p)\gets 0$
 \While{$|R|>0$}
 \State $r \gets$ \Call{dequeue}{R}
 %\State $N_r\gets N_r+1$
 \If{\Call{frm}{r}$=\ast$}
-\State let $p$ be such that $\forall p^\prime \in \Delta\ (|S(p)|>0  \wedge |S(p^\prime)|>0  \wedge \Call{$N_s$}{p}\le \Call{$N_s$}{p^\prime} )$
+\State let $p$ be such that $\forall p^\prime \in \Delta.\ (|S(p)|>0  \wedge |S(p^\prime)|>0  \wedge \Call{$N_s$}{p}\le \Call{$N_s$}{p^\prime} )$
 \Else 
 \State let $p$ be the sender of $r$
 \EndIf
@@ -34,7 +36,7 @@ The divided sections consisting of only sends and receives for the process are t
 %\EndIf
 %\State $S_i\gets S_i\cup\{s\}$ 
 \State $\mathit{cur}\gets \mathit{cur}\cup \{r,s\}$
-\If{$\forall p \in \Delta\ (\Call{$N_s$}{p}>=k \vee |S(p)|=0) \vee |R| = 0$}
+\If{$\forall p \in \Delta.\ (\Call{$N_s$}{p}>=k \vee |S(p)|=0) \vee |R| = 0$}
 \State $\mathit{secs}\gets\mathit{secs}\cup\{\mathit{cur}\}$
 \State $\mathit{cur}\gets\emptyset$
 \For{$p \in \Delta$}
@@ -109,32 +111,33 @@ $R$ is a list of all the sequential receives in a process.
 $\Delta$ is a set of IDs of all the senders $\{p_1, p_2, \ldots\}$.
 %$N_k$ is the number of receives in a single section.
 %$N_r$ is a number to count the receives added to the section and is initialized to $0$.
-The current section $\mathit{cur}$ represents a new program that contains only sends and receives. It is initialized to an empty set.
+The current section $\mathit{cur}$ represents a new program that contains only sends and receives. It is initialized to an empty set at line 1.
 The set $\mathit{secs}$ is used to store all the partitioned sections.
 
 The algorithm also applies a few auxiliary functions. 
 $\Call{S}{p}$ returns a list of sends for the sender $p$.
-$\Call{$N_S$}{p}$ returns the count of sends directed to the current section by the sender $p$.
+$\Call{$N_S$}{p}$ returns the count of sends directed to the current section by the sender $p$. It is initialized to zero for each process $p \in \Delta$ at line 2.
 $\Call{dequeue}{L}$ removes and returns the first element in the list $L$.
 $\Call{frm}{r}$ returns the sender ID of the receive $r$.
 
 Given the data structures and functions, \algoref{algo:main} runs in several steps: 
 \begin{compactenum}
-\item Dequeuing the first receive $r$ from the list $R$ (line 2);
-\item Choosing a sender $p$ based on the sender ID of $r$ (line 3 to line 7);
-\item Incrementing the count $N_s(p)$ and dequeuing the first send $s$ from the send list of $p$ (line 8 to line 9);
+\item Dequeuing the first receive $r$ from the list $R$ (line 4);
+\item Choosing a sender $p$ based on the sender ID of $r$ (line 5 to line 9);
+\item Incrementing the count $N_s(p)$ and dequeuing the first send $s$ from the send list of $p$ (line 10 to line 11);
 %\item Removing the sender $S$ from $\mathit{sender}$ if there are no sends remained in $S$ (line 11 to line 13);
-\item Adding the combination of $r$ and $s$ to the current section $\mathit{cur}$ (line 10);
-\item Adding the current section $\mathit{cur}$ to the set $\mathit{secs}$ and then resetting $\mathit{cur}$ and $N_s$ once $N_s(p)$ is greater or equal to $k$ for each sender $p\in\Delta$ or there are no sends in $S(p)$ or there are no receives in the destination process (line 11 to line 17);
-\item Repeating the above steps until $R$ is empty (line 1).
+\item Adding the combination of $r$ and $s$ to the current section $\mathit{cur}$ (line 12);
+\item Adding the current section $\mathit{cur}$ to the set $\mathit{secs}$ and then resetting $\mathit{cur}$ and $N_s$ once $N_s(p)$ is greater or equal to $k$ for each sender $p\in\Delta$ or there are no sends in $S(p)$ or there are no receives in the destination process (line 13 to line 19);
+\item Repeating the above steps until $R$ is empty (line 3).
 \end{compactenum}
 
 
 %$N_k$ is computed given two parameters: $|\mathit{sender}|\times\mathit{k}$ and $|R|$. The intuition is that the algorithm, if possible, distributes roughly average $k$ sends from each sender and therefore, adds $\mathit{sender}|\times\mathit{k}$ receives to a section. If there are not sufficient receives in $R$, then the algorithm adds all that remained in $R$ to the section, where the number is $|R|$. 
 
-For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, then the algorithm randomly chooses a sender $p$ that has the minimum count among the senders where each sender has at least one send at line 4. If $r$ is a deterministic receive, then $p$ is the specific sender for $r$ at line 6.
+For each receive $r$, if the sender ID is $\ast$ indicating $r$ is wildcard, then the algorithm randomly chooses a sender $p$ that has the minimum count among the senders where each sender has at least one send at line 6. Since the total number of sends directed to each process is equal to the number of receives in the same process, $S(p)$ is not empty for at least one process $p \in \Delta$. As such, the sender $p$ must exist and can be selected. 
+If $r$ is a deterministic receive, then $p$ is the specific sender for $r$ at line 8. 
 
-The intuition of the condition at line 11 is that each sender must distribute roughly $k$ sends to the current section unless the receive list $R$ is already empty. The sender may distribute more than $k$ sends as if more than $k$ deterministic receives that specify the sender are added to the section. If the total number of sends in the sender is less than $k$, then all the sends must be distributed from that sender.  
+The intuition of the condition at line 13 in \algoref{algo:main} is that each sender must distribute roughly $k$ sends to the current section unless the receive list $R$ is already empty. A sender may distribute more than $k$ sends in the case that more than $k$ deterministic receives that specify the sender are added to the section. If the total number of sends in the sender is less than $k$, then all the sends must be distributed from that sender.  
 
 %If a section is matched at line 11, the variables $\mathit{cur}$ and $N_s$ need to be reset at line 13 to line 16. 
 
@@ -143,13 +146,13 @@ The intuition of the condition at line 11 is that each sender must distribute ro
  
  \subsection{Match Pair Approximation}
 
-Given the partitioned sections in the set $\mathit{secs}$ by \algoref{algo:main}, the match pairs for each section can be generated independently by the existing algorithm in the prior work \cite{DBLP:conf/kbse/HuangMM13}. 
+Given the partitioned sections in the set $\mathit{secs}$ by \algoref{algo:main}, the match pairs for each section can be generated independently by an existing algorithm.
 
 Intuitively, the algorithm checks all the pairs of receives and sends in each section, and prunes obvious matches that cannot exist in any runtime implementation of the specification by comparing ranks of sends and receives. 
 A rank of a receive is its position in the list $R$. 
 A rank of a send is its position in the send list $S(p)$ from the sender $p$ to the receiver.    
 
-The existing algorithm implies the ``match over-approximation" property, in that all the precise match pairs (and maybe some unprecise match pairs) in the section are generated.
+The existing algorithm implies the ``match over-approximation" property: all the precise match pairs (and maybe some unprecise match pairs) in the section are generated.
 Please refer to the prior work \cite{DBLP:conf/kbse/HuangMM13} for more detail of the algorithm. 
 
 %\subsection{Match Pair Generation for The Example}

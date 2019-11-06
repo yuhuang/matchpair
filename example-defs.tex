@@ -2,19 +2,19 @@
 
 \newsavebox{\boxTZero}
 \begin{lrbox}{\boxTZero}
-\begin{minipage}[t]{0.4\linewidth}
+\begin{minipage}[t]{0.7\linewidth}
 \large
 \begin{alltt}
-\(r\sb{0}(from \ast, to p\sb{1}, w\sb{0})\)
+\(r\sb{0}(from \ast, to p\sb{1}, B\sb{0}, w\sb{0})\)
 \(w\sb{0}(r\sb{0})\)
-\(r\sb{1}(from \ast, to p\sb{1}, w\sb{1})\)
+\(r\sb{1}(from \ast, to p\sb{1}, B\sb{1}, w\sb{1})\)
 \(w\sb{1}(r\sb{1})\)
-\(r\sb{2}(from p\sb{2}, to p\sb{1}, w\sb{2})\)
+\(r\sb{2}(from p\sb{2}, to p\sb{1}, B\sb{2}, w\sb{2})\)
 \(w\sb{2}(r\sb{2})\)
-\(s\sb{5}(from p\sb{1}, to p\sb{2})\)
-\(r\sb{3}(from \ast, to p\sb{1}, w\sb{3})\)
+\(s\sb{5}(from p\sb{1}, to p\sb{2},\ 601)\)
+\(r\sb{3}(from \ast, to p\sb{1}, B\sb{3}, w\sb{3})\)
 \(w\sb{3}(r\sb{3})\)
-\(r\sb{4}(from \ast, to p\sb{1}, w\sb{4})\)
+\(r\sb{4}(from \ast, to p\sb{1}, B\sb{4}, w\sb{4})\)
 \(w\sb{4}(r\sb{4})\)
 \end{alltt}
 \end{minipage}
@@ -22,25 +22,25 @@
 
 \newsavebox{\boxTOne}
 \begin{lrbox}{\boxTOne}
-\begin{minipage}[t]{0.4\linewidth}
+\begin{minipage}[t]{0.7\linewidth}
 \large
 \begin{alltt}
-\(s\sb{0}(from p\sb{2}, to p\sb{1})\)
-\(s\sb{1}(from p\sb{2}, to p\sb{1})\)
-\(r\sb{5}(from p\sb{1}, to p\sb{2}, w\sb{5})\)
+\(s\sb{0}(from p\sb{2}, to p\sb{1},\ 101)\)
+\(s\sb{1}(from p\sb{2}, to p\sb{1},\ 201)\)
+\(r\sb{5}(from p\sb{1}, to p\sb{2}, B\sb{5}, w\sb{5})\)
 \(w\sb{5}(r\sb{5})\)
-\(s\sb{2}(from p\sb{2}, to p\sb{1})\)
+\(s\sb{2}(from p\sb{2}, to p\sb{1},\ 301)\)
 \end{alltt}
 \end{minipage}
 \end{lrbox}
 
 \newsavebox{\boxTTwo}
 \begin{lrbox}{\boxTTwo}
-\begin{minipage}[t]{0.4\linewidth}
+\begin{minipage}[t]{0.7\linewidth}
 \large
 \begin{alltt}
-\(s\sb{3}(from p\sb{3}, to p\sb{1})\)
-\(s\sb{4}(from p\sb{3}, to p\sb{1})\)
+\(s\sb{3}(from p\sb{3}, to p\sb{1},\ 401)\)
+\(s\sb{4}(from p\sb{3}, to p\sb{1},\ 501)\)
 \end{alltt}
 \end{minipage}
 \end{lrbox}
@@ -68,7 +68,7 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 
 \newsavebox{\TemplateboxTZero}
 \begin{lrbox}{\TemplateboxTZero}
-\begin{minipage}[t]{0.4\linewidth}
+\begin{minipage}[t]{0.5\linewidth}
 \large
 \begin{alltt}
 \(r\sb{0}(from \ast, to p\sb{r}, w\sb{0})\)
@@ -82,7 +82,7 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 
 \newsavebox{\TemplateboxTOne}
 \begin{lrbox}{\TemplateboxTOne}
-\begin{minipage}[t]{0.35\linewidth}
+\begin{minipage}[t]{0.5\linewidth}
 \large
 \begin{alltt}
 \(s\sb{0}(from p\sb{1}, to p\sb{r})\)
@@ -94,7 +94,7 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 
 \newsavebox{\TemplateboxTTwo}
 \begin{lrbox}{\TemplateboxTTwo}
-\begin{minipage}[t]{0.05\linewidth}
+\begin{minipage}[t]{0.2\linewidth}
 \large
 \begin{alltt}
 \ldots
@@ -104,7 +104,7 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 
 \newsavebox{\TemplateboxTThree}
 \begin{lrbox}{\TemplateboxTThree}
-\begin{minipage}[t]{0.35\linewidth}
+\begin{minipage}[t]{0.5\linewidth}
 \large
 \begin{alltt}
 \(s\sb{m0}(from p\sb{m}, to p\sb{r})\)
@@ -115,7 +115,7 @@ $\mathit{p_1}$ & $\mathit{p_2}$ & $\mathit{p_3}$ \\
 \end{lrbox}
 
 \newcommand\examplefigtemplate{
-\begin{figure*}[tb]
+\begin{figure*}[t]
 \begin{center}
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}[t]{c|c|c|c}

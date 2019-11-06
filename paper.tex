@@ -1,10 +1,19 @@
+%:
+%:
+%:
+%:
+%:
+%:
+%:
+%:
+%:
+%:
 % This is LLNCS.DEM the demonstration file of
 % the LaTeX macro package from Springer-Verlag
 % for Lecture Notes in Computer Science,
 % version 2.4 for LaTeX2e as of 16. April 2010
 %
-\documentclass[10pt,peerreview]{IEEEtran}
-%\citestyle{acmauthoryear}
+\documentclass[5p,times]{elsarticle}
 %
 \usepackage{url}
 \usepackage{comment}
@@ -22,6 +31,7 @@
 \usepackage{paralist}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{ulem}
 
 \usepackage{pgfplots}
 \pgfplotsset{width=11cm,height=8cm,compat=1.9}
@@ -57,43 +67,43 @@
 \newcommand{\thmref}[1]{Theorem~\ref{#1}}
 \newcommand{\algoref}[1]{Algorithm~\ref{#1}}
 
-
 \newtheorem{definition}{Definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-
-%\setcopyright{acmcopyright}
-
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{corollary}{Corollary}
 
 %
 \begin{document}
-\title{An Efficient Approach for Match Pair Approximation in Message Passing}
+\title{An Efficient Algorithm for Match Pair Approximation in Message Passing}
 
+\author[1]{Yu Huang}
+\ead{yuhuang@swufe.edu.cn}
+
+\author[1]{Kai Gong}
+\ead{gongkai1210@swufe.edu.cn}
+
+\author[2]{Eric Mercer}
+\ead{egm@byu.edu}
+
+\address[1]{Southwestern University of Finance and Economics}
+\address[2]{Brigham Young University}
 
 \begin{comment}
- \author{Yu Huang}
- \affiliation{
-  \institution{School of Economic Information Engineering, Southwestern University of Finance and Economics}
-  \streetaddress{No.555, Liutai Ave., Wenjiang District}
-  \city{Chengdu}
-  \state{Sichuan}
-  \postcode{611130}
-  \country{China}}
- \email{yuhuang@swufe.edu.cn}
-\author{Eric Mercer}
- \affiliation{
-  \institution{Computer Science Department, Brigham Young University}
-  \streetaddress{Brigham Young University}
-  \city{Provo}
-  \state{Utah}
-  \postcode{84602}
-  \country{USA}}
-\email{egm@byu.edu}
+\author{Yu Huang\inst{1}, Kai Gong\inst{1} \and Eric Mercer\inst{2}}
+\institute{Southwestern University of Finance and Economics\\ 
+               \email{\{yuhuang, gongkai1210\}@swufe.edu.cn} 
+                 \and Brigham Young University \\
+                    \email{egm@byu.edu}}
+         % \email{\{yuHuang,egm\}@byu.edu}}
 \end{comment}
 
-\author{Yu Huang, Eric Mercer}
+\begin{abstract} 
+\input{abstract}
+\end{abstract}
 
+\begin{keyword}
+Message Passing \sep MPI \sep SMT
+\end{keyword}
 
 \maketitle
 %
@@ -101,16 +111,6 @@
 \emergencystretch=1em
 
 
-
-\begin{abstract} 
-\input{abstract}
-\end{abstract}
-
-   
-
-\begin{IEEEkeywords}
-Message Passing, MPI, SMT.
-\end{IEEEkeywords}
 
 
 \input{example-defs}
@@ -125,7 +125,10 @@ Message Passing, MPI, SMT.
 \input{experiment}
 \input{related}
 \input{conclusion}
+\input{ack}
 
-\bibliographystyle{IEEEtran}
+\bibliographystyle{elsarticle-num-names}
+%:
+%:
 \bibliography{bib/paper}
 \end{document}

@@ -7,7 +7,7 @@ Note that all the precise match pairs for the CTP in \figref{fig:example} are ge
  
 \begin{definition}[\textit{Max Bound}]
 \label{def:maxbound}
-For any CTP, there exists a bound $k$, such that each process can be partitioned into a single section; this bound $k$ is called the \textit{max bound}. 
+For any CTP, there exists a bound $k$, such that each process can be partitioned into a single section; this minimal such bound $k$ is called the \textit{max bound}. 
 \end{definition} 
 
 The \textit{max bound} of $k$ can be statically computed. 
@@ -16,7 +16,7 @@ According to \algoref{algo:main}, a section can be constructed only if each send
 \begin{equation}
 k= \Call{max}{\{|S(p_i)|\mid p_i \in \mathit{sender}\}},
 \end{equation}
-that is able to group all the sends to a single section in the destination process, where the function $\mathrm{MAX}$ returns the maximum among a set of numbers. It is assumed that the total number of receives in a process is equal to the total number of sends directed to the process. Therefore, the process is partitioned into a single section. Further, if the bound $k$ satisfies that  
+when all the sends will be grouped into a single section in the destination process, where the function $\mathrm{MAX}$ returns the maximum among a set of numbers. It is assumed that the total number of receives in a process is equal to the total number of sends directed to the process. Therefore, the process is partitioned into a single section. Further, if the bound $k$ satisfies   
 \begin{equation}
 k= \Call{max}{\{k_j \mid p_j\in P\}},
 \end{equation} 
